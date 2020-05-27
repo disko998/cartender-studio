@@ -42,7 +42,7 @@ export default function VideoList({ navigation }) {
                         title={item.title}
                         details={item.details}
                         thumbnail={item.thumbnail}
-                        onPlay={navigateToPlayback.bind(item)}
+                        onPlay={() => navigateToPlayback(item)}
                         onTextMessage={onTextMessage}
                         onEmail={onEmail}
                     />

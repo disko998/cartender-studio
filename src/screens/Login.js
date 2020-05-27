@@ -10,7 +10,7 @@ function Login() {
         <View style={styles.container}>
             <View style={styles.logoStack}>
                 <Image
-                    source={require('../assets/images/cartender-logo-symbol-gray.jpg')}
+                    source={require('../assets/images/logo.jpg')}
                     resizeMode='contain'
                     style={styles.logo}
                 ></Image>

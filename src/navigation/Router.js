@@ -13,6 +13,7 @@ import CameraButton from '../components/CameraButton'
 import Login from '../screens/Login'
 import VideoList from '../screens/VideoList'
 import RecordWalkaround from '../screens/RecordWalkaround'
+import Playback from '../screens/Playback'
 
 const BottomTab = createBottomTabNavigator()
 const HomeStack = createStackNavigator()
@@ -31,7 +32,7 @@ function inDevelopmentScreen({ route, navigation }) {
     )
 }
 
-export function BottomTabNavigator({ navigation, route }) {
+export function BottomTabNavigator() {
     return (
         <BottomTab.Navigator
             initialRouteName={'Walkaround'}
@@ -113,10 +114,7 @@ export function HomeNavigation({ navigation }) {
                 name={Routes.RECORD_WALKAROUND}
                 component={RecordWalkaround}
             />
-            <HomeStack.Screen
-                name={Routes.PLAYBACK}
-                component={inDevelopmentScreen}
-            />
+            <HomeStack.Screen name={Routes.PLAYBACK} component={Playback} />
         </HomeStack.Navigator>
     )
 }

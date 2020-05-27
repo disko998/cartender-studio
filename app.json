@@ -5,10 +5,10 @@
         "platforms": ["ios", "android", "web"],
         "version": "1.0.0",
         "orientation": "portrait",
-        "icon": "./assets/images/icon.png",
+        "icon": "./src/assets/images/logo.jpg",
         "scheme": "myapp",
         "splash": {
-            "image": "./assets/images/splash.png",
+            "image": "./src/assets/images/logo.jpg",
             "resizeMode": "contain",
             "backgroundColor": "#ffffff"
         },
@@ -20,7 +20,7 @@
             "supportsTablet": true
         },
         "web": {
-            "favicon": "./assets/images/favicon.png"
+            "favicon": "./src/assets/images/logo.jpg"
         }
     }
 }

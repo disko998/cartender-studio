@@ -6,7 +6,7 @@ import Color from '../constants/Colors'
 function CameraButton(props) {
     return (
         <TouchableOpacity {...props}>
-            <Icon name='camera' size={40} color={Color.dark}></Icon>
+            <Icon name='camera' size={30} color={Color.dark}></Icon>
         </TouchableOpacity>
     )
 }
