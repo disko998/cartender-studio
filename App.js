@@ -2,7 +2,7 @@ import * as React from 'react'
 import { StatusBar, StyleSheet, View } from 'react-native'
 
 import useCachedResources from './src/hooks/useCachedResources'
-import Navigator from './src/navigation/Navigator'
+import Router from './src/navigation/Router'
 import Color from './src/constants/Colors'
 
 export default function App() {
@@ -14,7 +14,7 @@ export default function App() {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle='dark-content' />
-                <Navigator />
+                <Router />
             </View>
         )
     }
