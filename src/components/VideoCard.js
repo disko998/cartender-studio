@@ -1,122 +1,119 @@
-import React, { Component } from "react";
-import { StyleSheet, View, Image, Text } from "react-native";
-import EntypoIcon from "react-native-vector-icons/Entypo";
-import MaterialCommunityIconsIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import React from 'react'
+import { StyleSheet, View, ImageBackground, Text } from 'react-native'
+import EntypoIcon from 'react-native-vector-icons/Entypo'
+import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-function VideoCard(props) {
-  return (
-    <View style={[styles.container, props.style]}>
-      <View style={styles.cardBody}>
-        <Image
-          source={require("../assets/images/cardImage3.png")}
-          resizeMode="cover"
-          style={styles.videoThumbnail}
-        ></Image>
-        <View style={styles.videoInformationStack}>
-          <View style={styles.videoInformation}>
-            <Text style={styles.videoDetails}>
-              Video Details (VIN, Stock, Short Description, etc.)
-            </Text>
-            <Text style={styles.videoTitle}>Video Title</Text>
-          </View>
-          <View style={styles.rect}>
-            <EntypoIcon
-              name="controller-play"
-              style={styles.playIcon}
-            ></EntypoIcon>
-            <MaterialCommunityIconsIcon
-              name="cellphone-message"
-              style={styles.textIcon}
-            ></MaterialCommunityIconsIcon>
-            <EntypoIcon name="mail" style={styles.emailIcon}></EntypoIcon>
-          </View>
-        </View>
-      </View>
-    </View>
-  );
+import Color from '../constants/Colors'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+
+function VideoCard({
+    thumbnail,
+    title,
+    details,
+    onPlay,
+    onTextMessage,
+    onEmail,
+}) {
+    return (
+        <ImageBackground
+            style={styles.container}
+            source={thumbnail}
+            resizeMode='cover'
+        >
+            <View style={styles.cardBody}>
+                <View style={styles.videoInformationStack}>
+                    <View style={styles.videoInformation}>
+                        <Text
+                            ellipsizeMode='tail'
+                            numberOfLines={1}
+                            style={styles.videoTitle}
+                        >
+                            {title}
+                        </Text>
+                        <Text
+                            ellipsizeMode='tail'
+                            numberOfLines={1}
+                            style={styles.videoDetails}
+                        >
+                            {details}
+                        </Text>
+                    </View>
+                    <View style={styles.rect}>
+                        <TouchableOpacity onPress={onPlay}>
+                            <EntypoIcon
+                                name='controller-play'
+                                size={80}
+                                color={Color.white}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onTextMessage}>
+                            <MaterialCommunityIconsIcon
+                                name='cellphone-message'
+                                size={60}
+                                color={Color.white}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onEmail}>
+                            <EntypoIcon
+                                name='mail'
+                                size={60}
+                                color={Color.white}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+        </ImageBackground>
+    )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 5,
-      height: 5
+    container: {
+        shadowColor: Color.black,
+        shadowOffset: {
+            width: 5,
+            height: 5,
+        },
+        marginVertical: 8,
+        marginHorizontal: 16,
+        shadowOpacity: 0.1,
+        shadowRadius: 1.5,
+        elevation: 3,
+        overflow: 'hidden',
+        backgroundColor: Color.white,
+        borderRadius: 10,
+        height: 200,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 1.5,
-    elevation: 3,
-    overflow: "hidden",
-    backgroundColor: "rgba(230, 230, 230,1)"
-  },
-  cardBody: {
-    width: 360,
-    height: 220,
-    backgroundColor: "rgba(0,0,0,1)",
-    margin: 0
-  },
-  videoThumbnail: {
-    minHeight: 359,
-    height: 220,
-    padding: 0,
-    left: 0,
-    opacity: 0.5
-  },
-  videoInformation: {
-    top: 0,
-    left: 0,
-    width: 332,
-    height: 43,
-    position: "absolute",
-    flexDirection: "row"
-  },
-  videoDetails: {
-    fontFamily: "roboto-regular",
-    color: "rgba(255,255,255,1)",
-    fontSize: 12,
-    opacity: 0.8,
-    marginTop: 25
-  },
-  videoTitle: {
-    fontFamily: "roboto-regular",
-    color: "rgba(255,255,255,1)",
-    fontSize: 20,
-    marginLeft: -259
-  },
-  rect: {
-    width: 322,
-    height: 133,
-    position: "absolute",
-    opacity: 0.95,
-    flexDirection: "row",
-    flexWrap: "nowrap",
-    justifyContent: "space-around",
-    alignItems: "center",
-    left: 3,
-    top: 31
-  },
-  playIcon: {
-    color: "rgba(255,255,255,1)",
-    fontSize: 80,
-    height: 89
-  },
-  textIcon: {
-    color: "rgba(255,255,255,1)",
-    fontSize: 60,
-    height: 89
-  },
-  emailIcon: {
-    color: "rgba(255,255,255,1)",
-    fontSize: 60,
-    height: 89
-  },
-  videoInformationStack: {
-    top: 13,
-    left: 16,
-    width: 332,
-    height: 164,
-    position: "absolute"
-  }
-});
+    cardBody: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        padding: 15,
+    },
+    videoInformationStack: {
+        flexDirection: 'column',
+        flex: 1,
+    },
+    videoInformation: {
+        flexDirection: 'column',
+    },
+    videoDetails: {
+        fontFamily: 'roboto-regular',
+        color: Color.white,
+        fontSize: 12,
+    },
+    videoTitle: {
+        fontFamily: 'roboto-regular',
+        color: Color.white,
+        fontSize: 20,
+    },
+    rect: {
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        flex: 1,
+    },
+})
 
-export default VideoCard;
+export default VideoCard

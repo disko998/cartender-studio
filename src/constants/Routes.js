@@ -1,7 +1,8 @@
 export default {
-    LOGIN: 'login',
-    MAIN: 'main',
-    VIDEO_LIST: 'videoList',
-    PLAYBACK: 'playback',
-    HOME: 'home',
+    LOGIN: 'Login',
+    MAIN: 'Main',
+    VIDEO_LIST: 'Video List',
+    PLAYBACK: 'Playback',
+    HOME: 'Home',
+    RECORD: 'Record',
 }
