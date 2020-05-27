@@ -2,10 +2,10 @@ import React from 'react'
 import { StyleSheet, TouchableOpacity, Text } from 'react-native'
 import Color from '../constants/Colors'
 
-function PrimaryButton(props) {
+function PrimaryButton({ title, ...props }) {
     return (
         <TouchableOpacity {...props} style={[styles.container, props.style]}>
-            <Text style={styles.login}>Login</Text>
+            <Text style={styles.title}>{title}</Text>
         </TouchableOpacity>
     )
 }
@@ -19,8 +19,9 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingLeft: 16,
         paddingRight: 16,
+        height: 44,
     },
-    login: {
+    title: {
         color: Color.white,
         fontSize: 17,
         alignSelf: 'center',

@@ -18,16 +18,10 @@ function Login() {
             </View>
 
             <StyledInput placeholder='john@doe.com' label='Email' />
-            <StyledInput
-                placeholder='********'
-                label='Password'
-                secureTextEntry={true}
-            />
-            <PrimaryButton style={styles.loginButton}></PrimaryButton>
+            <StyledInput placeholder='********' label='Password' secureTextEntry={true} />
+            <PrimaryButton style={styles.loginButton} title='Login' />
 
-            <Text style={styles.text}>
-                Need help? Email support@cartender.com
-            </Text>
+            <Text style={styles.text}>Need help? Email support@cartender.com</Text>
             <Text style={styles.poweredByCartender}>Powered by Cartender</Text>
         </View>
     )
@@ -57,7 +51,6 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     loginButton: {
-        height: 44,
         width: 237,
         marginTop: 15,
     },

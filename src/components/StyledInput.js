@@ -2,14 +2,17 @@ import React from 'react'
 import { StyleSheet, View, Text, TextInput } from 'react-native'
 import Color from '../constants/Colors'
 
-function StyledInput({ containerStyle, label, helper, ...TextInputProps }) {
+function StyledInput({ containerStyle, light, label, helper, ...TextInputProps }) {
+    const labelColor = light ? Color.white : Color.black
+
     return (
         <View style={[styles.container, containerStyle]}>
-            <Text style={styles.label}>{label}</Text>
+            <Text style={[styles.labe, { color: labelColor }]}>{label}</Text>
             <TextInput
-                style={styles.inputStyle}
+                placeholderTextColor={Color.lightGray}
+                style={[styles.inputStyle, { color: labelColor }]}
                 {...TextInputProps}
-            ></TextInput>
+            />
             <Text style={styles.helper}>{helper}</Text>
         </View>
     )
@@ -23,7 +26,6 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 12,
         textAlign: 'left',
-        color: Color.black,
         opacity: 0.6,
     },
     inputStyle: {
@@ -32,7 +34,7 @@ const styles = StyleSheet.create({
         color: Color.black,
         fontSize: 16,
         alignSelf: 'stretch',
-        lineHeight: 16,
+        paddingHorizontal: 10,
         paddingTop: 8,
         paddingBottom: 8,
         width: '100%',

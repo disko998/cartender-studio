@@ -1,12 +1,13 @@
 import React from 'react'
-import { StyleSheet, View, ScrollView, Text } from 'react-native'
+import { StyleSheet, View, ScrollView, Text, TouchableOpacity } from 'react-native'
 import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import Color from '../constants/Colors'
 import Layout from '../constants/Layout'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import ShareTextOverlay from '../components/ShareTextOverlay'
 
 function Playback({ route, navigation }) {
+    const [shareTextVisible, setShareTextVisible] = React.useState(false)
     const { title, details } = route.params
 
     React.useEffect(() => {
@@ -16,6 +17,7 @@ function Playback({ route, navigation }) {
             headerTitleAlign: 'center',
         })
     }, [])
+
     return (
         <ScrollView style={styles.container}>
             <View
@@ -33,7 +35,10 @@ function Playback({ route, navigation }) {
                 <View style={styles.shareContainer}>
                     <Text style={styles.shareTitle}>Share Video</Text>
                     <View style={styles.shareButtonWrapper}>
-                        <TouchableOpacity style={styles.shareButton}>
+                        <TouchableOpacity
+                            style={styles.shareButton}
+                            onPress={() => setShareTextVisible(true)}
+                        >
                             <MaterialCommunityIconsIcon
                                 name='cellphone-text'
                                 size={50}
@@ -51,6 +56,11 @@ function Playback({ route, navigation }) {
                         </TouchableOpacity>
                     </View>
                 </View>
+
+                <ShareTextOverlay
+                    isVisible={shareTextVisible}
+                    toggleVisible={() => setShareTextVisible(false)}
+                />
             </View>
         </ScrollView>
     )

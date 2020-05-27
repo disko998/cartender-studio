@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StatusBar, StyleSheet, View } from 'react-native'
+import { StatusBar, StyleSheet, SafeAreaView } from 'react-native'
 
 import useCachedResources from './src/hooks/useCachedResources'
 import Router from './src/navigation/Router'
@@ -12,13 +12,10 @@ export default function App() {
         return null
     } else {
         return (
-            <View style={styles.container}>
-                <StatusBar
-                    barStyle='dark-content'
-                    backgroundColor={Color.white}
-                />
+            <SafeAreaView style={styles.container}>
+                <StatusBar barStyle='dark-content' backgroundColor={Color.white} />
                 <Router />
-            </View>
+            </SafeAreaView>
         )
     }
 }
