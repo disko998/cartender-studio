@@ -4,5 +4,5 @@ export default {
     VIDEO_LIST: 'Video List',
     PLAYBACK: 'Playback',
     HOME: 'Home',
-    RECORD: 'Record',
+    RECORD_WALKAROUND: 'Record Walkaround',
 }

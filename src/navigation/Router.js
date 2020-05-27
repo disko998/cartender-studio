@@ -5,14 +5,14 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import TabBarIcon from '../../components/TabBarIcon'
 import Routes from '../constants/Routes'
+import Color from '../constants/Colors'
+import CameraButton from '../components/CameraButton'
 
 // Screens
 import Login from '../screens/Login'
 import VideoList from '../screens/VideoList'
-import Color from '../constants/Colors'
-import CameraButton from '../components/CameraButton'
+import RecordWalkaround from '../screens/RecordWalkaround'
 
 const BottomTab = createBottomTabNavigator()
 const HomeStack = createStackNavigator()
@@ -98,7 +98,9 @@ export function HomeNavigation({ navigation }) {
                 headerRight: ({ focused }) => (
                     <CameraButton
                         style={{ marginRight: 15 }}
-                        onPress={() => navigation.navigate(Routes.RECORD)}
+                        onPress={() =>
+                            navigation.navigate(Routes.RECORD_WALKAROUND)
+                        }
                     />
                 ),
             }}
@@ -108,8 +110,8 @@ export function HomeNavigation({ navigation }) {
                 component={BottomTabNavigator}
             />
             <HomeStack.Screen
-                name={Routes.RECORD}
-                component={inDevelopmentScreen}
+                name={Routes.RECORD_WALKAROUND}
+                component={RecordWalkaround}
             />
             <HomeStack.Screen
                 name={Routes.PLAYBACK}

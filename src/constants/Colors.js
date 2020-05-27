@@ -1,6 +1,7 @@
 const Color = {
     // pallet
     mainBlue: 'rgba(18,97,189,1)',
+    success: 'rgba(86,155,7,1)',
 
     // monochrome
     black: '#000',

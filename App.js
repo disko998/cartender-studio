@@ -13,7 +13,10 @@ export default function App() {
     } else {
         return (
             <View style={styles.container}>
-                <StatusBar barStyle='dark-content' />
+                <StatusBar
+                    barStyle='dark-content'
+                    backgroundColor={Color.white}
+                />
                 <Router />
             </View>
         )
