@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, FlatList, StyleSheet } from 'react-native'
+import { SafeAreaView, FlatList, StyleSheet, Share } from 'react-native'
 
 import VideoCard from '../components/VideoCard'
 import Color from '../constants/Colors'
@@ -45,6 +45,29 @@ export default function VideoList({ navigation }) {
         setShareEmailVisible(true)
     }
 
+    onShare = async ({ video, title, details }) => {
+        try {
+            const result = await Share.share({
+                message: video,
+                url: video,
+                title: title,
+                subject: details,
+            })
+
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <FlatList
@@ -55,7 +78,7 @@ export default function VideoList({ navigation }) {
                         details={item.details}
                         thumbnail={item.thumbnail}
                         onPlay={() => navigateToPlayback(item)}
-                        onTextMessage={onTextMessage}
+                        onTextMessage={() => onShare(item)}
                         onEmail={onEmail}
                     />
                 )}

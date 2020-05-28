@@ -6,7 +6,14 @@ import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommun
 import Color from '../constants/Colors'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-function VideoCard({ thumbnail, title, details, onPlay, onTextMessage, onEmail }) {
+function VideoCard({
+    thumbnail,
+    title,
+    details,
+    onPlay,
+    onTextMessage,
+    onEmail,
+}) {
     return (
         <ImageBackground
             style={styles.container}
@@ -35,19 +42,16 @@ function VideoCard({ thumbnail, title, details, onPlay, onTextMessage, onEmail }
                         <TouchableOpacity onPress={onPlay}>
                             <EntypoIcon
                                 name='controller-play'
-                                size={80}
+                                size={60}
                                 color={Color.white}
                             />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onTextMessage}>
                             <MaterialCommunityIconsIcon
-                                name='cellphone-message'
-                                size={60}
+                                name='share'
+                                size={50}
                                 color={Color.white}
                             />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={onEmail}>
-                            <EntypoIcon name='mail' size={60} color={Color.white} />
                         </TouchableOpacity>
                     </View>
                 </View>

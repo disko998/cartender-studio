@@ -85,12 +85,20 @@ export function BottomTabNavigator() {
     )
 }
 
-export function HomeNavigation({ navigation }) {
+export function HomeNavigation({ navigation, route }) {
+    let tabName = 'Walkaround'
+    if (route.state) {
+        // tabName =
+        //     route.state.routes[0].state.routeNames[
+        //         route.state.routes[0].state.index
+        //     ]
+    }
+
     return (
         <HomeStack.Navigator
             initialRouteName={Routes.VIDEO_LIST}
             screenOptions={{
-                headerTitle: 'Walkaround Videos',
+                headerTitle: `${tabName} Videos`,
                 headerStyle: { height: 65 },
                 headerTitleStyle: {
                     fontFamily: 'roboto-700',
@@ -124,15 +132,15 @@ export default function Router() {
 
     return (
         <NavigationContainer>
-            <RooStack.Navigator headerMode='none'>
-                {!user ? (
-                    <RooStack.Screen name={Routes.LOGIN} component={Login} />
-                ) : (
-                    <RooStack.Screen
-                        name={Routes.HOME}
-                        component={HomeNavigation}
-                    />
-                )}
+            <RooStack.Navigator
+                headerMode='none'
+                initialRouteName={Routes.LOGIN}
+            >
+                <RooStack.Screen name={Routes.LOGIN} component={Login} />
+                <RooStack.Screen
+                    name={Routes.HOME}
+                    component={HomeNavigation}
+                />
             </RooStack.Navigator>
         </NavigationContainer>
     )
