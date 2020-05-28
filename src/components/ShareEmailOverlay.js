@@ -1,33 +1,25 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
-import Modal from './Modal'
 import StyledInput from './StyledInput'
+import Modal from './Modal'
 import BorderInput from './BorderInput'
 import PrimaryButton from './PrimaryButton'
 import Color from '../constants/Colors'
 
-const ShareTextOverlay = ({ isVisible, toggleVisible, onSubmit }) => {
+const ShareEmailOverlay = ({ isVisible, toggleVisible, onSubmit }) => {
     return (
         <Modal
             isVisible={isVisible}
             toggleVisible={toggleVisible}
-            title='Text Video'
+            title='Email Video'
         >
-            {/* <StyledInput
-                    light
-                    placeholder='000 000 0000'
-                    label='Enter Mobile Number'
-                    keyboardType='numeric'
-                /> */}
-            <BorderInput
-                keyboardType='numeric'
-                autoFocus={true}
-                placeholder='Enter Mobile Number'
-            />
+            <BorderInput placeholder='Recipient Email' />
+            <BorderInput placeholder='Email Subject' />
+            <BorderInput placeholder='Message' />
             <PrimaryButton
                 style={styles.button}
-                title='SEND TEXT'
+                title='SEND EMAIL'
                 onPress={onSubmit}
             />
         </Modal>
@@ -44,4 +36,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ShareTextOverlay
+export default ShareEmailOverlay

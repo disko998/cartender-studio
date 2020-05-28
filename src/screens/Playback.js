@@ -1,14 +1,23 @@
 import React from 'react'
-import { StyleSheet, View, ScrollView, Text, TouchableOpacity } from 'react-native'
+import {
+    StyleSheet,
+    View,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+} from 'react-native'
 import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import Color from '../constants/Colors'
 import Layout from '../constants/Layout'
 import ShareTextOverlay from '../components/ShareTextOverlay'
+import ShareEmailOverlay from '../components/ShareEmailOverlay'
+import VideoPlayer from '../components/VideoPlayer'
 
 function Playback({ route, navigation }) {
     const [shareTextVisible, setShareTextVisible] = React.useState(false)
-    const { title, details } = route.params
+    const [shareEmailVisible, setShareEmailVisible] = React.useState(false)
+    const { title, details, video } = route.params
 
     React.useEffect(() => {
         navigation.setOptions({
@@ -20,13 +29,7 @@ function Playback({ route, navigation }) {
 
     return (
         <ScrollView style={styles.container}>
-            <View
-                style={{
-                    width: Layout.window.width,
-                    height: Layout.window.width / 1.5,
-                    backgroundColor: Color.lightGray,
-                }}
-            />
+            <VideoPlayer src={video} />
 
             <View style={styles.contentWrapper}>
                 <Text style={styles.videoTitle}>{title}</Text>
@@ -46,7 +49,10 @@ function Playback({ route, navigation }) {
                             />
                             <Text style={styles.shareLabel}>Text</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.shareButton}>
+                        <TouchableOpacity
+                            style={styles.shareButton}
+                            onPress={() => setShareEmailVisible(true)}
+                        >
                             <MaterialCommunityIconsIcon
                                 name='email'
                                 size={55}
@@ -60,6 +66,10 @@ function Playback({ route, navigation }) {
                 <ShareTextOverlay
                     isVisible={shareTextVisible}
                     toggleVisible={() => setShareTextVisible(false)}
+                />
+                <ShareEmailOverlay
+                    isVisible={shareEmailVisible}
+                    toggleVisible={() => setShareEmailVisible(false)}
                 />
             </View>
         </ScrollView>

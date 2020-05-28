@@ -6,7 +6,7 @@
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./src/assets/images/icon.png",
-        "scheme": "SalesStudio",
+        "scheme": "salesStudio",
         "splash": {
             "image": "./src/assets/images/logo.jpg",
             "resizeMode": "contain",
