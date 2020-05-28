@@ -34,6 +34,7 @@ const _DATA = [
 export default function VideoList({ navigation }) {
     const [shareTextVisible, setShareTextVisible] = React.useState(false)
     const [shareEmailVisible, setShareEmailVisible] = React.useState(false)
+
     const navigateToPlayback = item => {
         navigation.navigate(Routes.PLAYBACK, item)
     }

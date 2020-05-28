@@ -6,9 +6,9 @@
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./src/assets/images/icon.png",
-        "scheme": "salesStudio",
+        "scheme": "myapp",
         "splash": {
-            "image": "./src/assets/images/logo.jpg",
+            "image": "./src/assets/images/logo.png",
             "resizeMode": "contain",
             "backgroundColor": "#ffffff"
         },
