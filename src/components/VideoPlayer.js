@@ -6,11 +6,11 @@ import Icon from 'react-native-vector-icons/Entypo'
 import Layout from '../constants/Layout'
 import Color from '../constants/Colors'
 
-export default function VideoPlayer({ src, ...props }) {
+export default function VideoPlayer({ src, containerStyle, ...props }) {
     const videoRef = React.useRef()
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, containerStyle]}>
             <Video
                 ref={videoRef}
                 source={{ uri: src }}
@@ -19,7 +19,6 @@ export default function VideoPlayer({ src, ...props }) {
                 isMuted={false}
                 resizeMode='cover'
                 shouldPlay={true}
-                isLooping
                 style={styles.video}
                 useNativeControls={true}
                 {...props}

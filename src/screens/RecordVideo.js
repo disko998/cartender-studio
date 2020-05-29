@@ -1,23 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {
-    Text,
-    View,
-    TouchableOpacity,
-    StyleSheet,
-    StatusBar,
-} from 'react-native'
+import { Text, View, StyleSheet, StatusBar } from 'react-native'
 import { Camera } from 'expo-camera'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import * as Permissions from 'expo-permissions'
-import { Ionicons } from '@expo/vector-icons'
 
 import CameraView from '../components/CameraView'
-import Color from '../constants/Colors'
+import RecordingControls from '../components/RecordingControls'
+import ConfirmControls from '../components/ConfirmControls'
+import VideoPlayer from '../components/VideoPlayer'
+
+const RECORDING_DURATION = 15
+const RECORDING_TYPE = 'Intro'
 
 export default function RecordVideo() {
-    const [direction, setDirection] = useState(null)
+    const [video, setVideo] = useState(null)
     const [isRecording, setRecording] = useState(false)
-    const [hasPermission, setHasPermission] = useState(null)
+    const [hasPermission, setHasPermission] = useState(false)
     const [type, setType] = useState(Camera.Constants.Type.back)
     const cameraRef = useRef()
 
@@ -37,7 +35,7 @@ export default function RecordVideo() {
         }
     }, [])
 
-    if (hasPermission === false || hasPermission === null) {
+    if (!hasPermission) {
         return <Text>No access to camera</Text>
     }
 
@@ -56,9 +54,11 @@ export default function RecordVideo() {
                 const src = await cameraRef.current.recordAsync({
                     maxDuration: 15,
                 })
+
+                // Do something on finish
                 console.log(src)
+                setVideo(src)
             } else {
-                setRecording(false)
                 cameraRef.current.stopRecording()
             }
         } catch (error) {
@@ -68,29 +68,48 @@ export default function RecordVideo() {
         }
     }
 
+    const onReject = () => {
+        setVideo(null)
+    }
+
+    const onConfirm = () => {
+        console.log(video)
+    }
+
     return (
         <View style={styles.container}>
             <StatusBar hidden={true} />
 
-            <CameraView type={type} style={styles.camera} ref={cameraRef} />
+            <View style={styles.camera}>
+                {!video ? (
+                    <CameraView
+                        isRecording={isRecording}
+                        type={type}
+                        ref={cameraRef}
+                        duration={RECORDING_DURATION}
+                    />
+                ) : (
+                    <VideoPlayer
+                        src={video.uri}
+                        containerStyle={styles.videoPlayer}
+                    />
+                )}
+            </View>
 
             <View style={[styles.controls]}>
-                <Text style={styles.label}>Intro</Text>
-                <TouchableOpacity
-                    onPress={onRecord}
-                    style={[
-                        styles.recordButton,
-                        { borderRadius: isRecording ? 10 : 50 },
-                    ]}
-                />
-
-                <TouchableOpacity onPress={onFlip}>
-                    <Ionicons
-                        name={'ios-reverse-camera'}
-                        size={40}
-                        color={Color.black}
+                {!video ? (
+                    <RecordingControls
+                        isRecording={isRecording}
+                        step={RECORDING_TYPE}
+                        onFlip={onFlip}
+                        onRecord={onRecord}
                     />
-                </TouchableOpacity>
+                ) : (
+                    <ConfirmControls
+                        onConfirm={onConfirm}
+                        onReject={onReject}
+                    />
+                )}
             </View>
         </View>
     )
@@ -104,20 +123,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
     },
-    label: {
-        fontFamily: 'roboto-700',
-        color: Color.danger,
-        fontSize: 20,
-        textAlign: 'center',
-    },
-    recordButton: {
-        backgroundColor: Color.danger,
-        width: 60,
-        height: 60,
-        borderRadius: 50,
+    videoPlayer: {
+        flex: 1,
+        width: '100%',
     },
 })
 
+// IF WE NEED PORTRAIT
+// const [direction, setDirection] = useState(null)
 // ScreenOrientation.addOrientationChangeListener(oInfo => {
 //     const orientation = oInfo.orientationInfo.orientation
 //     if (
