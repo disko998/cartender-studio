@@ -14,6 +14,7 @@ import Login from '../screens/Login'
 import VideoList from '../screens/VideoList'
 import RecordWalkaround from '../screens/RecordWalkaround'
 import Playback from '../screens/Playback'
+import RecordVideo from '../screens/RecordVideo'
 
 const BottomTab = createBottomTabNavigator()
 const HomeStack = createStackNavigator()
@@ -99,7 +100,8 @@ export function BottomTabNavigator({ navigation, route }) {
 export function HomeNavigation({ navigation, route }) {
     return (
         <HomeStack.Navigator
-            initialRouteName={Routes.VIDEO_LIST}
+            initialRouteName={Routes.CAMERA}
+            headerMode='none'
             screenOptions={{
                 headerStyle: { height: 65 },
                 headerTitleStyle: {
@@ -124,6 +126,7 @@ export function HomeNavigation({ navigation, route }) {
                 name={Routes.RECORD_WALKAROUND}
                 component={RecordWalkaround}
             />
+            <HomeStack.Screen name={Routes.CAMERA} component={RecordVideo} />
             <HomeStack.Screen name={Routes.PLAYBACK} component={Playback} />
         </HomeStack.Navigator>
     )

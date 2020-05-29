@@ -5,4 +5,5 @@ export default {
     PLAYBACK: 'Playback',
     HOME: 'Home',
     RECORD_WALKAROUND: 'Record Walkaround',
+    CAMERA: 'Camera',
 }

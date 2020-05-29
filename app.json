@@ -17,7 +17,8 @@
         },
         "assetBundlePatterns": ["**/*"],
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+            "requireFullScreen": true
         },
         "web": {
             "favicon": "./src/assets/images/logo.jpg"
