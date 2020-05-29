@@ -6,14 +6,7 @@ import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommun
 import Color from '../constants/Colors'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-function VideoCard({
-    thumbnail,
-    title,
-    details,
-    onPlay,
-    onTextMessage,
-    onEmail,
-}) {
+function VideoCard({ thumbnail, title, details, onPlay, onShare }) {
     return (
         <ImageBackground
             style={styles.container}
@@ -46,7 +39,7 @@ function VideoCard({
                                 color={Color.white}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={onTextMessage}>
+                        <TouchableOpacity onPress={onShare}>
                             <MaterialCommunityIconsIcon
                                 name='share'
                                 size={50}

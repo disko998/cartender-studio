@@ -1,97 +1,41 @@
 import React from 'react'
-import { SafeAreaView, FlatList, StyleSheet, Share } from 'react-native'
+import { SafeAreaView, FlatList, StyleSheet } from 'react-native'
 
 import VideoCard from '../components/VideoCard'
 import Color from '../constants/Colors'
 import Routes from '../constants/Routes'
-import ShareTextOverlay from '../components/ShareTextOverlay'
-import ShareEmailOverlay from '../components/ShareEmailOverlay'
-
-const _DATA = [
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'Video Title',
-        details: 'Video Details (VIN, Stock, Short Description, etc.)',
-        thumbnail: 'https://images4.alphacoders.com/947/thumb-1920-947053.jpg',
-        video: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Video Title',
-        details: 'Video Details (VIN, Stock, Short Description, etc.)',
-        thumbnail: 'https://images4.alphacoders.com/947/thumb-1920-947053.jpg',
-        video: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Video Title',
-        details: 'Video Details (VIN, Stock, Short Description, etc.)',
-        thumbnail: 'https://images4.alphacoders.com/947/thumb-1920-947053.jpg',
-        video: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
-    },
-]
+import { AppContext } from '../context/AppProvoder'
 
 export default function VideoList({ navigation }) {
-    const [shareTextVisible, setShareTextVisible] = React.useState(false)
-    const [shareEmailVisible, setShareEmailVisible] = React.useState(false)
+    const {
+        data: { videoList },
+        actions: { onShare },
+    } = React.useContext(AppContext)
 
     const navigateToPlayback = item => {
         navigation.navigate(Routes.PLAYBACK, item)
-    }
-    const onTextMessage = () => {
-        setShareTextVisible(true)
-    }
-    const onEmail = () => {
-        setShareEmailVisible(true)
-    }
-
-    onShare = async ({ video, title, details }) => {
-        try {
-            const result = await Share.share({
-                message: video,
-                url: video,
-                title: title,
-                subject: details,
-            })
-
-            if (result.action === Share.sharedAction) {
-                if (result.activityType) {
-                    // shared with activity type of result.activityType
-                } else {
-                    // shared
-                }
-            } else if (result.action === Share.dismissedAction) {
-                // dismissed
-            }
-        } catch (error) {
-            alert(error.message)
-        }
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <FlatList
-                data={_DATA}
+                data={videoList}
                 renderItem={({ item }) => (
                     <VideoCard
                         title={item.title}
                         details={item.details}
                         thumbnail={item.thumbnail}
                         onPlay={() => navigateToPlayback(item)}
-                        onTextMessage={() => onShare(item)}
-                        onEmail={onEmail}
+                        onShare={() =>
+                            onShare({
+                                message: item.video,
+                                title: item.title,
+                                subject: item.details,
+                            })
+                        }
                     />
                 )}
                 keyExtractor={item => item.id}
-            />
-
-            <ShareTextOverlay
-                isVisible={shareTextVisible}
-                toggleVisible={() => setShareTextVisible(false)}
-            />
-            <ShareEmailOverlay
-                isVisible={shareEmailVisible}
-                toggleVisible={() => setShareEmailVisible(false)}
             />
         </SafeAreaView>
     )

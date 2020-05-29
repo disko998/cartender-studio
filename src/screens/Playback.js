@@ -9,14 +9,14 @@ import {
 import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import Color from '../constants/Colors'
-import Layout from '../constants/Layout'
-import ShareTextOverlay from '../components/ShareTextOverlay'
-import ShareEmailOverlay from '../components/ShareEmailOverlay'
 import VideoPlayer from '../components/VideoPlayer'
+import { AppContext } from '../context/AppProvoder'
 
 function Playback({ route, navigation }) {
-    const [shareTextVisible, setShareTextVisible] = React.useState(false)
-    const [shareEmailVisible, setShareEmailVisible] = React.useState(false)
+    const {
+        actions: { onShare },
+    } = React.useContext(AppContext)
+
     const { title, details, video } = route.params
 
     React.useEffect(() => {
@@ -26,6 +26,11 @@ function Playback({ route, navigation }) {
             headerTitleAlign: 'center',
         })
     }, [])
+
+    const shareVideo = React.useMemo(
+        () => () => onShare({ message: video, title: title, subject: details }),
+        [route.params],
+    )
 
     return (
         <ScrollView style={styles.container}>
@@ -40,37 +45,17 @@ function Playback({ route, navigation }) {
                     <View style={styles.shareButtonWrapper}>
                         <TouchableOpacity
                             style={styles.shareButton}
-                            onPress={() => setShareTextVisible(true)}
+                            onPress={shareVideo}
                         >
                             <MaterialCommunityIconsIcon
-                                name='cellphone-text'
-                                size={50}
-                                color={Color.mainBlue}
-                            />
-                            <Text style={styles.shareLabel}>Text</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.shareButton}
-                            onPress={() => setShareEmailVisible(true)}
-                        >
-                            <MaterialCommunityIconsIcon
-                                name='email'
+                                name='share'
                                 size={55}
                                 color={Color.mainBlue}
                             />
-                            <Text style={styles.shareLabel}>Email</Text>
+                            <Text style={styles.shareLabel}>Share</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-
-                <ShareTextOverlay
-                    isVisible={shareTextVisible}
-                    toggleVisible={() => setShareTextVisible(false)}
-                />
-                <ShareEmailOverlay
-                    isVisible={shareEmailVisible}
-                    toggleVisible={() => setShareEmailVisible(false)}
-                />
             </View>
         </ScrollView>
     )

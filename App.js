@@ -4,6 +4,7 @@ import { StatusBar, StyleSheet, SafeAreaView } from 'react-native'
 import useCachedResources from './src/hooks/useCachedResources'
 import Router from './src/navigation/Router'
 import Color from './src/constants/Colors'
+import AppProvider from './src/context/AppProvoder'
 
 export default function App() {
     const isLoadingComplete = useCachedResources()
@@ -13,8 +14,13 @@ export default function App() {
     } else {
         return (
             <SafeAreaView style={styles.container}>
-                <StatusBar barStyle='dark-content' backgroundColor={Color.white} />
-                <Router />
+                <StatusBar
+                    barStyle='dark-content'
+                    backgroundColor={Color.white}
+                />
+                <AppProvider>
+                    <Router />
+                </AppProvider>
             </SafeAreaView>
         )
     }

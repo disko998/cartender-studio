@@ -32,7 +32,18 @@ function inDevelopmentScreen({ route, navigation }) {
     )
 }
 
-export function BottomTabNavigator() {
+export function BottomTabNavigator({ navigation, route }) {
+    // set nav options here stupid
+
+    let tabName = 'Walkaround'
+    if (route.state) {
+        tabName = route.state.routeNames[route.state.index]
+    }
+
+    navigation.setOptions({
+        headerTitle: `${tabName} Videos`,
+    })
+
     return (
         <BottomTab.Navigator
             initialRouteName={'Walkaround'}
@@ -86,19 +97,10 @@ export function BottomTabNavigator() {
 }
 
 export function HomeNavigation({ navigation, route }) {
-    let tabName = 'Walkaround'
-    if (route.state) {
-        // tabName =
-        //     route.state.routes[0].state.routeNames[
-        //         route.state.routes[0].state.index
-        //     ]
-    }
-
     return (
         <HomeStack.Navigator
             initialRouteName={Routes.VIDEO_LIST}
             screenOptions={{
-                headerTitle: `${tabName} Videos`,
                 headerStyle: { height: 65 },
                 headerTitleStyle: {
                     fontFamily: 'roboto-700',
@@ -136,11 +138,14 @@ export default function Router() {
                 headerMode='none'
                 initialRouteName={Routes.LOGIN}
             >
-                <RooStack.Screen name={Routes.LOGIN} component={Login} />
-                <RooStack.Screen
-                    name={Routes.HOME}
-                    component={HomeNavigation}
-                />
+                {!user ? (
+                    <RooStack.Screen name={Routes.LOGIN} component={Login} />
+                ) : (
+                    <RooStack.Screen
+                        name={Routes.HOME}
+                        component={HomeNavigation}
+                    />
+                )}
             </RooStack.Navigator>
         </NavigationContainer>
     )
