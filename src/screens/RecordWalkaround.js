@@ -4,15 +4,21 @@ import { StyleSheet, ScrollView, Text } from 'react-native'
 import Color from '../constants/Colors'
 import BorderInput from '../components/BorderInput'
 import StepButton from '../components/StepButton'
+import Routes from '../constants/Routes'
 
 function RecordWalkaround({ navigation }) {
-    React.useEffect(() => {
-        navigation.setOptions({
-            headerTitle: 'Record Walkaround',
-            headerRight: null,
-            headerTitleAlign: 'center',
+    const confirm = video => {
+        console.log(video)
+        navigation.goBack()
+    }
+
+    const cameraScreen = (duration, stepName) => {
+        navigation.navigate(Routes.CAMERA, {
+            duration,
+            stepName,
+            confirm,
         })
-    }, [])
+    }
 
     return (
         <ScrollView style={styles.container}>
@@ -22,10 +28,23 @@ function RecordWalkaround({ navigation }) {
             <Text style={styles.text}>
                 Select or Record Your Video Segments
             </Text>
-            <StepButton title='Step 1: Intro' success />
-            <StepButton title='Step 2: Exterior' />
-            <StepButton title='Step 3: Interior' />
-            <StepButton title='Step 4: Outro' />
+            <StepButton
+                title='Step 1: Intro'
+                success
+                onPress={() => cameraScreen(15, 'Intro')}
+            />
+            <StepButton
+                title='Step 2: Exterior'
+                onPress={() => cameraScreen(30, 'Exterior')}
+            />
+            <StepButton
+                title='Step 3: Interior'
+                onPress={() => cameraScreen(30, 'Interior')}
+            />
+            <StepButton
+                title='Step 4: Outro'
+                onPress={() => cameraScreen(15, 'Outro')}
+            />
             <StepButton title='GENERATE VIDEO' style={styles.finishButton} />
         </ScrollView>
     )

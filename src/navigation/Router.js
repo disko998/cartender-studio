@@ -18,6 +18,7 @@ import RecordVideo from '../screens/RecordVideo'
 
 const BottomTab = createBottomTabNavigator()
 const HomeStack = createStackNavigator()
+const RecordingStack = createStackNavigator()
 const RooStack = createStackNavigator()
 
 function inDevelopmentScreen({ route, navigation }) {
@@ -97,11 +98,31 @@ export function BottomTabNavigator({ navigation, route }) {
     )
 }
 
-export function HomeNavigation({ navigation, route }) {
+export function RecodingStack({ navigation }) {
+    navigation.setOptions({
+        headerTitle: 'Record Walkaround',
+        headerRight: null,
+        headerTitleAlign: 'center',
+    })
+
+    return (
+        <RecordingStack.Navigator
+            initialRouteName={Routes.RECORD_WALKAROUND}
+            headerMode='none'
+        >
+            <RecordingStack.Screen
+                name={Routes.RECORD_WALKAROUND}
+                component={RecordWalkaround}
+            />
+            <HomeStack.Screen name={Routes.CAMERA} component={RecordVideo} />
+        </RecordingStack.Navigator>
+    )
+}
+
+export function HomeNavigation({ navigation }) {
     return (
         <HomeStack.Navigator
-            initialRouteName={Routes.CAMERA}
-            headerMode='none'
+            initialRouteName={Routes.BottomTabNavigator}
             screenOptions={{
                 headerStyle: { height: 65 },
                 headerTitleStyle: {
@@ -124,9 +145,9 @@ export function HomeNavigation({ navigation, route }) {
             />
             <HomeStack.Screen
                 name={Routes.RECORD_WALKAROUND}
-                component={RecordWalkaround}
+                component={RecodingStack}
             />
-            <HomeStack.Screen name={Routes.CAMERA} component={RecordVideo} />
+
             <HomeStack.Screen name={Routes.PLAYBACK} component={Playback} />
         </HomeStack.Navigator>
     )

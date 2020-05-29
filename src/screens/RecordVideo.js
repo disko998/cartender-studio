@@ -9,10 +9,9 @@ import RecordingControls from '../components/RecordingControls'
 import ConfirmControls from '../components/ConfirmControls'
 import VideoPlayer from '../components/VideoPlayer'
 
-const RECORDING_DURATION = 15
-const RECORDING_TYPE = 'Intro'
+export default function RecordVideo({ route }) {
+    const { duration, stepName, confirm } = route.params
 
-export default function RecordVideo() {
     const [video, setVideo] = useState(null)
     const [isRecording, setRecording] = useState(false)
     const [hasPermission, setHasPermission] = useState(false)
@@ -31,7 +30,9 @@ export default function RecordVideo() {
         ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
 
         return () => {
-            ScreenOrientation.unlockAsync()
+            ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.PORTRAIT,
+            )
         }
     }, [])
 
@@ -52,11 +53,10 @@ export default function RecordVideo() {
             if (!isRecording) {
                 setRecording(true)
                 const src = await cameraRef.current.recordAsync({
-                    maxDuration: 15,
+                    maxDuration: duration,
                 })
 
                 // Do something on finish
-                console.log(src)
                 setVideo(src)
             } else {
                 cameraRef.current.stopRecording()
@@ -73,7 +73,7 @@ export default function RecordVideo() {
     }
 
     const onConfirm = () => {
-        console.log(video)
+        confirm(video)
     }
 
     return (
@@ -86,7 +86,7 @@ export default function RecordVideo() {
                         isRecording={isRecording}
                         type={type}
                         ref={cameraRef}
-                        duration={RECORDING_DURATION}
+                        duration={duration}
                     />
                 ) : (
                     <VideoPlayer
@@ -100,7 +100,7 @@ export default function RecordVideo() {
                 {!video ? (
                     <RecordingControls
                         isRecording={isRecording}
-                        step={RECORDING_TYPE}
+                        step={stepName}
                         onFlip={onFlip}
                         onRecord={onRecord}
                     />
