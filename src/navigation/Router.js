@@ -103,13 +103,11 @@ export function RecodingStack({ navigation }) {
         headerTitle: 'Record Walkaround',
         headerRight: null,
         headerTitleAlign: 'center',
+        headerShown: false,
     })
 
     return (
-        <RecordingStack.Navigator
-            initialRouteName={Routes.RECORD_WALKAROUND}
-            headerMode='none'
-        >
+        <RecordingStack.Navigator initialRouteName={Routes.RECORD_WALKAROUND}>
             <RecordingStack.Screen
                 name={Routes.RECORD_WALKAROUND}
                 component={RecordWalkaround}
@@ -122,7 +120,7 @@ export function RecodingStack({ navigation }) {
 export function HomeNavigation({ navigation }) {
     return (
         <HomeStack.Navigator
-            initialRouteName={Routes.BottomTabNavigator}
+            initialRouteName={Routes.VIDEO_LIST}
             screenOptions={{
                 headerStyle: { height: 65 },
                 headerTitleStyle: {
@@ -143,11 +141,11 @@ export function HomeNavigation({ navigation }) {
                 name={Routes.VIDEO_LIST}
                 component={BottomTabNavigator}
             />
-            <HomeStack.Screen
+            <RecordingStack.Screen
                 name={Routes.RECORD_WALKAROUND}
-                component={RecodingStack}
+                component={RecordWalkaround}
             />
-
+            <HomeStack.Screen name={Routes.CAMERA} component={RecordVideo} />
             <HomeStack.Screen name={Routes.PLAYBACK} component={Playback} />
         </HomeStack.Navigator>
     )

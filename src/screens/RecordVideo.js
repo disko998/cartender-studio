@@ -9,7 +9,7 @@ import RecordingControls from '../components/RecordingControls'
 import ConfirmControls from '../components/ConfirmControls'
 import VideoPlayer from '../components/VideoPlayer'
 
-export default function RecordVideo({ route }) {
+export default function RecordVideo({ route, navigation }) {
     const { duration, stepName, confirm } = route.params
 
     const [video, setVideo] = useState(null)
@@ -26,6 +26,10 @@ export default function RecordVideo({ route }) {
             )
             setHasPermission(status === 'granted')
         })()
+
+        navigation.setOptions({
+            headerShown: false,
+        })
 
         ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
 
@@ -56,7 +60,6 @@ export default function RecordVideo({ route }) {
                     maxDuration: duration,
                 })
 
-                // Do something on finish
                 setVideo(src)
             } else {
                 cameraRef.current.stopRecording()

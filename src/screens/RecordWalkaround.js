@@ -7,6 +7,12 @@ import StepButton from '../components/StepButton'
 import Routes from '../constants/Routes'
 
 function RecordWalkaround({ navigation }) {
+    navigation.setOptions({
+        headerTitle: 'Record Walkaround',
+        headerRight: null,
+        headerTitleAlign: 'center',
+    })
+
     const confirm = video => {
         console.log(video)
         navigation.goBack()
