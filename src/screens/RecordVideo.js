@@ -10,8 +10,9 @@ import ConfirmControls from '../components/ConfirmControls'
 import VideoPlayer from '../components/VideoPlayer'
 
 export default function RecordVideo({ route, navigation }) {
-    const { duration, stepName, confirm } = route.params
-
+    const { duration = 15, stepName = 'Video', onStepFinish } = JSON.parse(
+        route.params,
+    )
     const [video, setVideo] = useState(null)
     const [isRecording, setRecording] = useState(false)
     const [hasPermission, setHasPermission] = useState(false)
@@ -76,7 +77,7 @@ export default function RecordVideo({ route, navigation }) {
     }
 
     const onConfirm = () => {
-        confirm(video)
+        onStepFinish({ [stepName]: video.uri })
     }
 
     return (

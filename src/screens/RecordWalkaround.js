@@ -5,25 +5,31 @@ import Color from '../constants/Colors'
 import BorderInput from '../components/BorderInput'
 import StepButton from '../components/StepButton'
 import Routes from '../constants/Routes'
+import { recordingDuration } from '../constants/Settings'
 
 function RecordWalkaround({ navigation }) {
-    navigation.setOptions({
-        headerTitle: 'Record Walkaround',
-        headerRight: null,
-        headerTitleAlign: 'center',
-    })
+    React.useEffect(() => {
+        navigation.setOptions({
+            headerTitle: 'Record Walkaround',
+            headerRight: null,
+            headerTitleAlign: 'center',
+        })
+    }, [])
 
-    const confirm = video => {
+    const onStepFinish = video => {
         console.log(video)
         navigation.goBack()
     }
 
-    const cameraScreen = (duration, stepName) => {
-        navigation.navigate(Routes.CAMERA, {
-            duration,
-            stepName,
-            confirm,
-        })
+    const navigateToRecordingScreen = (duration, stepName) => {
+        navigation.navigate(
+            Routes.CAMERA,
+            JSON.stringify({
+                duration,
+                stepName,
+                onStepFinish,
+            }),
+        )
     }
 
     return (
@@ -37,21 +43,35 @@ function RecordWalkaround({ navigation }) {
             <StepButton
                 title='Step 1: Intro'
                 success
-                onPress={() => cameraScreen(15, 'Intro')}
+                onPress={() =>
+                    navigateToRecordingScreen(recordingDuration.INTRO, 'Intro')
+                }
             />
             <StepButton
                 title='Step 2: Exterior'
-                onPress={() => cameraScreen(30, 'Exterior')}
+                onPress={() =>
+                    navigateToRecordingScreen(
+                        recordingDuration.EXTERIOR,
+                        'Exterior',
+                    )
+                }
             />
             <StepButton
                 title='Step 3: Interior'
-                onPress={() => cameraScreen(30, 'Interior')}
+                onPress={() =>
+                    navigateToRecordingScreen(
+                        recordingDuration.INTERIOR,
+                        'Interior',
+                    )
+                }
             />
             <StepButton
                 title='Step 4: Outro'
-                onPress={() => cameraScreen(15, 'Outro')}
+                onPress={() =>
+                    navigateToRecordingScreen(recordingDuration.OUTRO, 'Outro')
+                }
             />
-            <StepButton title='GENERATE VIDEO' style={styles.finishButton} />
+            <StepButton title='GENERATE VIDEO' style={styles.generateButton} />
         </ScrollView>
     )
 }
@@ -69,7 +89,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 5,
     },
-    finishButton: {
+    generateButton: {
         backgroundColor: Color.mainBlue,
         borderRadius: 10,
         marginBottom: 30,
