@@ -5,8 +5,29 @@ import PrimaryButton from '../components/PrimaryButton'
 import StyledInput from '../components/StyledInput'
 import Color from '../constants/Colors'
 import Routes from '../constants/Routes'
+import { AppContext } from '../context/AppProvider'
 
 function Login({ navigation }) {
+    const {
+        actions: { loginWithEmailAndPassword },
+    } = React.useContext(AppContext)
+
+    const [credentials, setCredentials] = React.useState({
+        email: '',
+        password: '',
+    })
+
+    const onLogin = async () => {
+        try {
+            await loginWithEmailAndPassword(
+                credentials.email,
+                credentials.password,
+            )
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.logoStack}>
@@ -18,16 +39,27 @@ function Login({ navigation }) {
                 <Text style={styles.salesStudio}>Sales Studio</Text>
             </View>
 
-            <StyledInput placeholder='john@doe.com' label='Email' />
+            <StyledInput
+                placeholder='john@doe.com'
+                label='Email'
+                value={credentials.email}
+                onChangeText={email =>
+                    setCredentials({ ...credentials, email })
+                }
+            />
             <StyledInput
                 placeholder='********'
                 label='Password'
                 secureTextEntry={true}
+                value={credentials.password}
+                onChangeText={password =>
+                    setCredentials({ ...credentials, password })
+                }
             />
             <PrimaryButton
                 style={styles.loginButton}
                 title='Login'
-                onPress={() => navigation.navigate(Routes.HOME)}
+                onPress={onLogin}
             />
 
             <Text style={styles.text}>

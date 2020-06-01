@@ -20,7 +20,7 @@ export const post = async (path, body, header) => {
         },
     })
 
-    return JSON.parse(await response.json())
+    return await response.json()
 }
 
 export const get = async (path, header) => {
@@ -31,5 +31,5 @@ export const get = async (path, header) => {
         },
     })
 
-    return JSON.parse(await response.json())
+    return await response.json()
 }

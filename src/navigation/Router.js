@@ -15,6 +15,7 @@ import VideoList from '../screens/VideoList'
 import RecordWalkaround from '../screens/RecordWalkaround'
 import Playback from '../screens/Playback'
 import RecordVideo from '../screens/RecordVideo'
+import { AppContext } from '../context/AppProvider'
 
 const BottomTab = createBottomTabNavigator()
 const HomeStack = createStackNavigator()
@@ -152,7 +153,9 @@ export function HomeNavigation({ navigation }) {
 }
 
 export default function Router() {
-    const user = true
+    const {
+        data: { user },
+    } = React.useContext(AppContext)
 
     return (
         <NavigationContainer>

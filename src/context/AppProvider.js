@@ -19,10 +19,16 @@ export default class AppProvider extends Component {
             throw new Error('Please enter correct email and password')
         }
 
-        const user = await post(api.auth, {
+        let user = await post(api.auth, {
             email,
             password,
         })
+
+        if (!user.token) {
+            throw new Error(user.message)
+        }
+
+        console.log('response', user)
 
         await AsyncStorage.setItem('token', user.token)
 
@@ -103,7 +109,7 @@ export default class AppProvider extends Component {
             onStepFinish,
         } = this
 
-        console.log(this.state.currentVideo)
+        console.log('State', this.state.user)
 
         return (
             <Provider
