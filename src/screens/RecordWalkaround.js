@@ -5,9 +5,20 @@ import Color from '../constants/Colors'
 import BorderInput from '../components/BorderInput'
 import StepButton from '../components/StepButton'
 import Routes from '../constants/Routes'
-import { recordingDuration } from '../constants/Settings'
+import { recordingDuration, steps } from '../constants/Settings'
+import { AppContext } from '../context/AppProvider'
 
 function RecordWalkaround({ navigation }) {
+    const {
+        data: { currentVideo },
+    } = React.useContext(AppContext)
+
+    const [form, setForm] = React.useState({
+        vin: '',
+        title: '',
+        details: '',
+    })
+
     React.useEffect(() => {
         navigation.setOptions({
             headerTitle: 'Record Walkaround',
@@ -16,59 +27,77 @@ function RecordWalkaround({ navigation }) {
         })
     }, [])
 
-    const onStepFinish = video => {
-        console.log(video)
-        navigation.goBack()
-    }
-
-    const navigateToRecordingScreen = (duration, stepName) => {
-        navigation.navigate(
-            Routes.CAMERA,
-            JSON.stringify({
-                duration,
-                stepName,
-                onStepFinish,
-            }),
-        )
-    }
+    const navigateToRecordingScreen = React.useMemo(
+        () => (duration, stepName) => {
+            navigation.navigate(
+                Routes.CAMERA,
+                JSON.stringify({
+                    duration,
+                    stepName,
+                }),
+            )
+        },
+        [],
+    )
 
     return (
         <ScrollView style={styles.container}>
-            <BorderInput placeholder='Enter VIN #' />
-            <BorderInput placeholder='Enter Vehicle Title' />
-            <BorderInput placeholder='Enter Vehicle Details' />
+            <BorderInput
+                placeholder='Enter VIN #'
+                value={form.vin}
+                onChangeText={value => setForm({ ...form, vin: value })}
+            />
+            <BorderInput
+                placeholder='Enter Vehicle Title'
+                value={form.title}
+                onChangeText={value => setForm({ ...form, title: value })}
+            />
+            <BorderInput
+                placeholder='Enter Vehicle Details'
+                value={form.details}
+                onChangeText={value => setForm({ ...form, details: value })}
+            />
             <Text style={styles.text}>
                 Select or Record Your Video Segments
             </Text>
             <StepButton
-                title='Step 1: Intro'
-                success
+                title={`Step 1: ${steps.INTRO}`}
+                success={!!currentVideo[steps.INTRO]}
                 onPress={() =>
-                    navigateToRecordingScreen(recordingDuration.INTRO, 'Intro')
+                    navigateToRecordingScreen(
+                        recordingDuration.INTRO,
+                        steps.INTRO,
+                    )
                 }
             />
             <StepButton
-                title='Step 2: Exterior'
+                title={`Step 2: ${steps.EXTERIOR}`}
+                success={!!currentVideo[steps.EXTERIOR]}
                 onPress={() =>
                     navigateToRecordingScreen(
                         recordingDuration.EXTERIOR,
-                        'Exterior',
+                        steps.EXTERIOR,
                     )
                 }
             />
             <StepButton
-                title='Step 3: Interior'
+                title={`Step 3: ${steps.INTERIOR}`}
+                success={!!currentVideo[steps.INTERIOR]}
                 onPress={() =>
                     navigateToRecordingScreen(
                         recordingDuration.INTERIOR,
-                        'Interior',
+                        steps.INTERIOR,
                     )
                 }
             />
             <StepButton
-                title='Step 4: Outro'
+                title={`Step 4: ${steps.OUTRO}`}
+                success={!!currentVideo[steps.OUTRO]}
                 onPress={() =>
-                    navigateToRecordingScreen(recordingDuration.OUTRO, 'Outro')
+                    navigateToRecordingScreen(
+                        recordingDuration.OUTRO,
+                        steps.OUTRO,
+                    )
                 }
             />
             <StepButton title='GENERATE VIDEO' style={styles.generateButton} />

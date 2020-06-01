@@ -4,7 +4,7 @@ import { SafeAreaView, FlatList, StyleSheet } from 'react-native'
 import VideoCard from '../components/VideoCard'
 import Color from '../constants/Colors'
 import Routes from '../constants/Routes'
-import { AppContext } from '../context/AppProvoder'
+import { AppContext } from '../context/AppProvider'
 
 export default function VideoList({ navigation }) {
     const {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { Text, View, StyleSheet, StatusBar } from 'react-native'
 import { Camera } from 'expo-camera'
 import * as ScreenOrientation from 'expo-screen-orientation'
@@ -8,11 +8,13 @@ import CameraView from '../components/CameraView'
 import RecordingControls from '../components/RecordingControls'
 import ConfirmControls from '../components/ConfirmControls'
 import VideoPlayer from '../components/VideoPlayer'
+import { AppContext } from '../context/AppProvider'
 
 export default function RecordVideo({ route, navigation }) {
-    const { duration = 15, stepName = 'Video', onStepFinish } = JSON.parse(
-        route.params,
-    )
+    const { duration = 15, stepName = 'Video' } = JSON.parse(route.params)
+    const {
+        actions: { onStepFinish },
+    } = useContext(AppContext)
     const [video, setVideo] = useState(null)
     const [isRecording, setRecording] = useState(false)
     const [hasPermission, setHasPermission] = useState(false)
@@ -78,6 +80,7 @@ export default function RecordVideo({ route, navigation }) {
 
     const onConfirm = () => {
         onStepFinish({ [stepName]: video.uri })
+        navigation.goBack()
     }
 
     return (

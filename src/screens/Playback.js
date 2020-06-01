@@ -10,7 +10,7 @@ import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommun
 
 import Color from '../constants/Colors'
 import VideoPlayer from '../components/VideoPlayer'
-import { AppContext } from '../context/AppProvoder'
+import { AppContext } from '../context/AppProvider'
 
 function Playback({ route, navigation }) {
     const {

@@ -4,3 +4,10 @@ export const recordingDuration = {
     INTERIOR: 30,
     OUTRO: 15,
 }
+
+export const steps = {
+    INTRO: 'Intro',
+    EXTERIOR: 'Exterior',
+    INTERIOR: 'Interior',
+    OUTRO: 'Outro',
+}

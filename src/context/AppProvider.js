@@ -11,6 +11,7 @@ export default class AppProvider extends Component {
     state = {
         user: null,
         videoList: _DATA,
+        currentVideo: {},
     }
 
     loginWithEmailAndPassword = async (email, password) => {
@@ -86,13 +87,23 @@ export default class AppProvider extends Component {
         }
     }
 
+    onStepFinish = uri => {
+        this.setState({
+            ...this.state,
+            currentVideo: { ...this.state.currentVideo, ...uri },
+        })
+    }
+
     render() {
         const {
             onShare,
             loginWithEmailAndPassword,
             getVideos,
             renderVideo,
+            onStepFinish,
         } = this
+
+        console.log(this.state.currentVideo)
 
         return (
             <Provider
@@ -103,6 +114,7 @@ export default class AppProvider extends Component {
                         loginWithEmailAndPassword,
                         getVideos,
                         renderVideo,
+                        onStepFinish,
                     },
                 }}
             >

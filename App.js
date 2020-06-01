@@ -4,7 +4,7 @@ import { StatusBar, StyleSheet, SafeAreaView } from 'react-native'
 import useCachedResources from './src/hooks/useCachedResources'
 import Router from './src/navigation/Router'
 import Color from './src/constants/Colors'
-import AppProvider from './src/context/AppProvoder'
+import AppProvider from './src/context/AppProvider'
 
 export default function App() {
     const isLoadingComplete = useCachedResources()
