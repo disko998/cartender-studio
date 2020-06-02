@@ -155,7 +155,18 @@ export function HomeNavigation({ navigation }) {
 export default function Router() {
     const {
         data: { user },
+        actions: { getCurrentUser },
     } = React.useContext(AppContext)
+
+    React.useEffect(() => {
+        ;(async () => {
+            try {
+                await getCurrentUser()
+            } catch (error) {
+                console.log(error.message)
+            }
+        })()
+    }, [])
 
     return (
         <NavigationContainer>

@@ -24,7 +24,7 @@ export const post = async (path, body, header) => {
 }
 
 export const get = async (path, header) => {
-    const response = fetch(`${URL}${path}`, {
+    const response = await fetch(`${URL}${path}`, {
         method: 'GET',
         headers: {
             ...header,

@@ -10,7 +10,7 @@ export const Provider = AppContext.Provider
 export default class AppProvider extends Component {
     state = {
         user: null,
-        videoList: _DATA,
+        projects: null,
         currentVideo: {},
     }
 
@@ -20,29 +20,34 @@ export default class AppProvider extends Component {
         }
 
         let user = await post(api.auth, {
-            email,
-            password,
+            email: 'disko998@gmail.com',
+            password: '697971a5294079197abe596f57f425fd',
         })
 
         if (!user.token) {
             throw new Error(user.message)
         }
 
-        console.log('response', user)
-
         await AsyncStorage.setItem('token', user.token)
 
-        this.setState({ ...this.state, user })
+        this.getCurrentUser()
     }
 
     getCurrentUser = async () => {
         const token = await AsyncStorage.getItem('token')
 
-        const user = await get(`${api.profile}`, {
+        const userData = await get(`${api.profile}`, {
             Authorization: `Bearer ${token}`,
         })
 
-        this.setState({ ...this.state, user })
+        if (userData.message) {
+            throw new Error(user.message)
+        }
+
+        this.setState({
+            ...this.state,
+            user: { ...userData.user, token },
+        })
     }
 
     renderVideo = async metadata => {
@@ -63,11 +68,15 @@ export default class AppProvider extends Component {
     }
 
     getVideos = async () => {
-        const videos = await get(`${api.projects}?sort=-createDate`, {
+        const projects = await get(`${api.projects}?sort=-createDate`, {
             Authorization: `Bearer ${this.state.user.token}`,
         })
 
-        this.setState({ ...this.state, videoList: videos })
+        if (projects.message) {
+            throw new Error(projects.message)
+        }
+
+        this.setState({ ...this.state, projects })
     }
 
     onShare = async ({ message, title, subject }) => {
@@ -107,9 +116,10 @@ export default class AppProvider extends Component {
             getVideos,
             renderVideo,
             onStepFinish,
+            getCurrentUser,
         } = this
 
-        console.log('State', this.state.user)
+        console.log('State', this.state)
 
         return (
             <Provider
@@ -121,6 +131,7 @@ export default class AppProvider extends Component {
                         getVideos,
                         renderVideo,
                         onStepFinish,
+                        getCurrentUser,
                     },
                 }}
             >
