@@ -15,9 +15,9 @@ function RecordWalkaround({ navigation }) {
     } = React.useContext(AppContext)
 
     const [form, setForm] = React.useState({
-        vin: 'vin123',
-        title: 'title',
-        details: 'details',
+        vin: '',
+        title: '',
+        details: '',
     })
 
     React.useEffect(() => {

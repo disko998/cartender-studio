@@ -30,7 +30,11 @@ export default function VideoList({ navigation }) {
     }, [])
 
     const navigateToPlayback = item => {
-        navigation.navigate(Routes.PLAYBACK, item)
+        navigation.navigate(Routes.PLAYBACK, {
+            title: item['vehicle-title'],
+            details: item['vehicle-details'],
+            video: item['s3_url'],
+        })
     }
 
     if (!projects) {
@@ -52,7 +56,9 @@ export default function VideoList({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <FlatList
-                data={projects.projects}
+                data={projects.projects.filter(
+                    i => i['render-status'] === 'finished',
+                )}
                 renderItem={({ item }) => (
                     <VideoCard
                         title={item['vehicle-title']}
@@ -61,9 +67,9 @@ export default function VideoList({ navigation }) {
                         onPlay={() => navigateToPlayback(item)}
                         onShare={() =>
                             onShare({
-                                message: item.video,
-                                title: item.title,
-                                subject: item.details,
+                                message: item['s3_url'],
+                                title: item['vehicle-title'],
+                                subject: item['vehicle-details'],
                             })
                         }
                     />

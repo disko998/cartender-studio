@@ -8,6 +8,7 @@ export default CameraView = React.forwardRef(
         const [counter, setCounter] = React.useState(duration)
 
         React.useEffect(() => {
+            console.log(isRecording)
             if (isRecording) {
                 counter > 0 && setTimeout(() => setCounter(counter - 1), 1000)
             } else {
@@ -17,10 +18,15 @@ export default CameraView = React.forwardRef(
 
         return (
             <Camera
-                style={{ flex: 1 }}
+                style={styles.camera}
                 {...props}
                 ref={ref}
                 ratio='16:9'
+                autoFocus={Camera.Constants.AutoFocus.on}
+                whiteBalance={Camera.Constants.WhiteBalance.auto}
+                videoStabilizationMode={
+                    Camera.Constants.VideoStabilization.auto
+                }
                 onMountError={err => {
                     alert(err.message)
                 }}
@@ -42,6 +48,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         padding: '5%',
     },
+    camera: { flex: 1 },
     frame: {
         flex: 1,
         backgroundColor: 'transparent',

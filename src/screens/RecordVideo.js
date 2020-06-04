@@ -59,11 +59,12 @@ export default function RecordVideo({ route, navigation }) {
         try {
             if (!isRecording) {
                 setRecording(true)
-                const src = await cameraRef.current.recordAsync({
+                const uri = await cameraRef.current.recordAsync({
+                    quality: Camera.Constants.VideoQuality['480p'],
                     maxDuration: duration,
                 })
 
-                setVideo(src)
+                setVideo(uri)
             } else {
                 cameraRef.current.stopRecording()
             }

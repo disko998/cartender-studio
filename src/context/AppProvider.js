@@ -4,7 +4,7 @@ import { RNS3 } from 'react-native-aws3'
 
 import { _DATA } from './_DATA'
 import { post, api, get } from '../api'
-import { s3Options } from '../constants/Settings'
+import { s3Options, templates } from '../constants/Settings'
 
 export const AppContext = React.createContext()
 export const Provider = AppContext.Provider
@@ -14,14 +14,14 @@ export default class AppProvider extends Component {
         user: null,
         projects: null,
         currentVideo: {
-            Exterior:
-                'https://ct-sales-studio.s3.amazonaws.com/a384f275-cd2b-49d2-9990-f36c97af47ed.mp4',
-            Interior:
-                'https://ct-sales-studio.s3.amazonaws.com/691eb6fb-1a9c-4790-b7b8-216d2551c5f2.mp4',
-            Intro:
-                'https://ct-sales-studio.s3.amazonaws.com/11b7cb92-be93-4a08-9240-f30dd0a78c2c.mp4',
-            Outro:
-                'https://ct-sales-studio.s3.amazonaws.com/b3890fe1-37e8-4788-ae14-1d63f68aa764.mp4',
+            // Exterior:
+            //     'https://ct-sales-studio.s3.amazonaws.com/a384f275-cd2b-49d2-9990-f36c97af47ed.mp4',
+            // Interior:
+            //     'https://ct-sales-studio.s3.amazonaws.com/691eb6fb-1a9c-4790-b7b8-216d2551c5f2.mp4',
+            // Intro:
+            //     'https://ct-sales-studio.s3.amazonaws.com/11b7cb92-be93-4a08-9240-f30dd0a78c2c.mp4',
+            // Outro:
+            //     'https://ct-sales-studio.s3.amazonaws.com/b3890fe1-37e8-4788-ae14-1d63f68aa764.mp4',
         },
     }
 
@@ -70,10 +70,7 @@ export default class AppProvider extends Component {
 
         const postData = {
             'request-type': 'new',
-            template: {
-                template: 'CT_Walkaround',
-                target: 'HD_60s',
-            },
+            template: templates.walkaround,
             'vehicle-title': title,
             'vehicle-details': details,
             'vehicle-vin': vin,
@@ -81,10 +78,8 @@ export default class AppProvider extends Component {
             'video-clip2': Interior,
             'video-clip3': Exterior,
             'video-clip4': Outro,
-            output: title,
+            output: `${title} ${vin}`,
         }
-
-        console.log('generating...', postData)
 
         const res = await post(api.projects, postData, {
             Authorization: `Bearer ${this.state.user.token}`,
@@ -92,10 +87,12 @@ export default class AppProvider extends Component {
 
         console.log(res)
 
-        // this.setState({
-        //     ...this.state,
-        //     videoList: { video, ...this.state.videoList },
-        // })
+        this.getVideos()
+
+        this.setState({
+            ...this.state,
+            currentVideo: {},
+        })
     }
 
     getVideos = async () => {
