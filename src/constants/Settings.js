@@ -11,3 +11,11 @@ export const steps = {
     INTERIOR: 'Interior',
     OUTRO: 'Outro',
 }
+
+export const s3Options = {
+    bucket: 'ct-sales-studio',
+    region: 'us-west-2',
+    accessKey: 'AKIAVMKO6NDINYFA2UEP',
+    secretKey: '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',
+    successActionStatus: 201,
+}

@@ -78,9 +78,13 @@ export default function RecordVideo({ route, navigation }) {
         setVideo(null)
     }
 
-    const onConfirm = () => {
-        onStepFinish({ [stepName]: video.uri })
-        navigation.goBack()
+    const onConfirm = async () => {
+        try {
+            await onStepFinish(stepName, video.uri)
+            navigation.goBack()
+        } catch (error) {
+            alert(error.message)
+        }
     }
 
     return (

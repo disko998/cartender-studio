@@ -11,12 +11,13 @@ import { AppContext } from '../context/AppProvider'
 function RecordWalkaround({ navigation }) {
     const {
         data: { currentVideo },
+        actions: { generateVideo },
     } = React.useContext(AppContext)
 
     const [form, setForm] = React.useState({
-        vin: '',
-        title: '',
-        details: '',
+        vin: 'vin123',
+        title: 'title',
+        details: 'details',
     })
 
     React.useEffect(() => {
@@ -39,6 +40,10 @@ function RecordWalkaround({ navigation }) {
         },
         [],
     )
+
+    const onGenerateVideo = async () => {
+        generateVideo(form)
+    }
 
     return (
         <ScrollView style={styles.container}>
@@ -100,7 +105,11 @@ function RecordWalkaround({ navigation }) {
                     )
                 }
             />
-            <StepButton title='GENERATE VIDEO' style={styles.generateButton} />
+            <StepButton
+                title='GENERATE VIDEO'
+                style={styles.generateButton}
+                onPress={onGenerateVideo}
+            />
         </ScrollView>
     )
 }

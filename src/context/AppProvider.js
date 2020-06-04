@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { Share, AsyncStorage } from 'react-native'
+import { RNS3 } from 'react-native-aws3'
 
 import { _DATA } from './_DATA'
 import { post, api, get } from '../api'
+import { s3Options } from '../constants/Settings'
 
 export const AppContext = React.createContext()
 export const Provider = AppContext.Provider
@@ -11,7 +13,16 @@ export default class AppProvider extends Component {
     state = {
         user: null,
         projects: null,
-        currentVideo: {},
+        currentVideo: {
+            Exterior:
+                'https://ct-sales-studio.s3.amazonaws.com/a384f275-cd2b-49d2-9990-f36c97af47ed.mp4',
+            Interior:
+                'https://ct-sales-studio.s3.amazonaws.com/691eb6fb-1a9c-4790-b7b8-216d2551c5f2.mp4',
+            Intro:
+                'https://ct-sales-studio.s3.amazonaws.com/11b7cb92-be93-4a08-9240-f30dd0a78c2c.mp4',
+            Outro:
+                'https://ct-sales-studio.s3.amazonaws.com/b3890fe1-37e8-4788-ae14-1d63f68aa764.mp4',
+        },
     }
 
     loginWithEmailAndPassword = async (email, password) => {
@@ -50,21 +61,41 @@ export default class AppProvider extends Component {
         })
     }
 
-    renderVideo = async metadata => {
-        const video = await post(
-            api.projects,
-            {
-                ...metadata,
-            },
-            {
-                Authorization: `Bearer ${this.state.user.token}`,
-            },
-        )
+    generateVideo = async ({ vin, title, details }) => {
+        const { Intro, Interior, Exterior, Outro } = this.state.currentVideo
 
-        this.setState({
-            ...this.state,
-            videoList: { video, ...this.state.videoList },
+        if (!(vin && title && details) || !(Intro, Interior, Exterior, Outro)) {
+            return
+        }
+
+        const postData = {
+            'request-type': 'new',
+            template: {
+                template: 'CT_Walkaround',
+                target: 'HD_60s',
+            },
+            'vehicle-title': title,
+            'vehicle-details': details,
+            'vehicle-vin': vin,
+            'video-clip1': Intro,
+            'video-clip2': Interior,
+            'video-clip3': Exterior,
+            'video-clip4': Outro,
+            output: title,
+        }
+
+        console.log('generating...', postData)
+
+        const res = await post(api.projects, postData, {
+            Authorization: `Bearer ${this.state.user.token}`,
         })
+
+        console.log(res)
+
+        // this.setState({
+        //     ...this.state,
+        //     videoList: { video, ...this.state.videoList },
+        // })
     }
 
     getVideos = async () => {
@@ -102,10 +133,27 @@ export default class AppProvider extends Component {
         }
     }
 
-    onStepFinish = uri => {
+    onStepFinish = async (stepName, uri) => {
+        const uriFragments = uri.split('/')
+
+        const file = {
+            uri,
+            name: uriFragments[uriFragments.length - 1],
+            type: 'video/mp4',
+        }
+
+        const data = new FormData()
+        data.append('video', file)
+
+        const res = await RNS3.put(file, s3Options)
+
+        const videoUrl = res.body.postResponse.location
+
+        const stepVideo = { [stepName]: videoUrl }
+
         this.setState({
             ...this.state,
-            currentVideo: { ...this.state.currentVideo, ...uri },
+            currentVideo: { ...this.state.currentVideo, ...stepVideo },
         })
     }
 
@@ -114,7 +162,7 @@ export default class AppProvider extends Component {
             onShare,
             loginWithEmailAndPassword,
             getVideos,
-            renderVideo,
+            generateVideo,
             onStepFinish,
             getCurrentUser,
         } = this
@@ -129,7 +177,7 @@ export default class AppProvider extends Component {
                         onShare,
                         loginWithEmailAndPassword,
                         getVideos,
-                        renderVideo,
+                        generateVideo,
                         onStepFinish,
                         getCurrentUser,
                     },
