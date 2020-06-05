@@ -9,6 +9,11 @@ import { s3Options, templates } from '../constants/Settings'
 export const AppContext = React.createContext()
 export const Provider = AppContext.Provider
 
+const myCred = {
+    email: 'disko998@gmail.com',
+    password: '697971a5294079197abe596f57f425fd',
+}
+
 export default class AppProvider extends Component {
     state = {
         loading: false,
@@ -32,8 +37,8 @@ export default class AppProvider extends Component {
         }
 
         let user = await post(api.auth, {
-            email: 'disko998@gmail.com',
-            password: '697971a5294079197abe596f57f425fd',
+            email,
+            password,
         })
 
         if (!user.token) {
