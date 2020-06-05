@@ -1,25 +1,16 @@
 import React from 'react'
 import { View, StyleSheet, Text } from 'react-native'
 import { Camera } from 'expo-camera'
+import { Countdown } from 'react-native-popcountdown'
+
+import Counter from './Counter'
 import Color from '../constants/Colors'
 
 export default CameraView = React.forwardRef(
     ({ isRecording, duration, ...props }, ref) => {
-        const [counter, setCounter] = React.useState(duration)
-
-        React.useEffect(() => {
-            console.log(isRecording)
-            if (isRecording) {
-                counter > 0 && setTimeout(() => setCounter(counter - 1), 1000)
-            } else {
-                setCounter(duration)
-            }
-        }, [counter, isRecording])
-
         return (
             <Camera
                 style={styles.camera}
-                {...props}
                 ref={ref}
                 ratio='16:9'
                 autoFocus={Camera.Constants.AutoFocus.on}
@@ -30,12 +21,22 @@ export default CameraView = React.forwardRef(
                 onMountError={err => {
                     alert(err.message)
                 }}
+                {...props}
             >
                 <View style={styles.overlay}>
                     <View style={styles.frame} />
-                    <Text style={styles.timer}>{`Time Remaining: ${
-                        counter < 10 ? `0${counter}` : counter
-                    } sec`}</Text>
+                    <View style={styles.counter}>
+                        <Text style={styles.digitTxtStyle}>
+                            Time Remaining:
+                        </Text>
+                        <Countdown
+                            running={isRecording}
+                            until={duration}
+                            timeToShow={['S']}
+                            digitStyle={styles.digitStyle}
+                            digitTxtStyle={styles.digitTxtStyle}
+                        />
+                    </View>
                 </View>
             </Camera>
         )
@@ -57,11 +58,22 @@ const styles = StyleSheet.create({
         borderColor: Color.white,
         borderRadius: 1,
     },
-    timer: {
+    digitStyle: {
+        backgroundColor: 'transparent',
+        height: 'auto',
+    },
+    digitTxtStyle: {
+        margin: 0,
+        padding: 0,
         color: Color.white,
         textAlign: 'center',
         fontFamily: 'roboto-700',
         fontSize: 17,
-        marginBottom: 10,
+    },
+    counter: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 })

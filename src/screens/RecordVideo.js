@@ -13,7 +13,7 @@ import { AppContext } from '../context/AppProvider'
 export default function RecordVideo({ route, navigation }) {
     const { duration = 15, stepName = 'Video' } = JSON.parse(route.params)
     const {
-        actions: { onStepFinish },
+        actions: { onStepFinish, hideLoading, showLoading },
     } = useContext(AppContext)
     const [video, setVideo] = useState(null)
     const [isRecording, setRecording] = useState(false)
@@ -81,10 +81,13 @@ export default function RecordVideo({ route, navigation }) {
 
     const onConfirm = async () => {
         try {
+            showLoading()
             await onStepFinish(stepName, video.uri)
             navigation.goBack()
         } catch (error) {
             alert(error.message)
+        } finally {
+            hideLoading()
         }
     }
 

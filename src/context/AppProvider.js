@@ -11,6 +11,7 @@ export const Provider = AppContext.Provider
 
 export default class AppProvider extends Component {
     state = {
+        loading: false,
         user: null,
         projects: null,
         currentVideo: {
@@ -65,7 +66,7 @@ export default class AppProvider extends Component {
         const { Intro, Interior, Exterior, Outro } = this.state.currentVideo
 
         if (!(vin && title && details) || !(Intro, Interior, Exterior, Outro)) {
-            return
+            throw new Error('not valid')
         }
 
         const postData = {
@@ -85,7 +86,11 @@ export default class AppProvider extends Component {
             Authorization: `Bearer ${this.state.user.token}`,
         })
 
-        console.log(res)
+        if (res.message) {
+            throw new Error(res.message)
+        }
+
+        __DEV__ && console.log(res)
 
         this.getVideos()
 
@@ -142,16 +147,28 @@ export default class AppProvider extends Component {
         const data = new FormData()
         data.append('video', file)
 
+        __DEV__ && console.log(data)
+
         const res = await RNS3.put(file, s3Options)
 
         const videoUrl = res.body.postResponse.location
 
         const stepVideo = { [stepName]: videoUrl }
 
+        __DEV__ && console.log(stepVideo)
+
         this.setState({
             ...this.state,
             currentVideo: { ...this.state.currentVideo, ...stepVideo },
         })
+    }
+
+    showLoading = () => {
+        this.setState({ ...this.state, loading: true })
+    }
+
+    hideLoading = () => {
+        this.setState({ ...this.state, loading: false })
     }
 
     render() {
@@ -162,6 +179,8 @@ export default class AppProvider extends Component {
             generateVideo,
             onStepFinish,
             getCurrentUser,
+            hideLoading,
+            showLoading,
         } = this
 
         console.log('State', this.state)
@@ -177,6 +196,8 @@ export default class AppProvider extends Component {
                         generateVideo,
                         onStepFinish,
                         getCurrentUser,
+                        showLoading,
+                        hideLoading,
                     },
                 }}
             >

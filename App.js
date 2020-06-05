@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { StatusBar, StyleSheet, SafeAreaView } from 'react-native'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 import useCachedResources from './src/hooks/useCachedResources'
-import Router from './src/navigation/Router'
 import Color from './src/constants/Colors'
-import AppProvider from './src/context/AppProvider'
+import Router from './src/navigation/Router'
+import AppProvider, { AppContext } from './src/context/AppProvider'
 
 export default function App() {
     const isLoadingComplete = useCachedResources()
@@ -19,6 +20,9 @@ export default function App() {
                     backgroundColor={Color.white}
                 />
                 <AppProvider>
+                    <AppContext.Consumer>
+                        {state => <Spinner visible={state.data.loading} />}
+                    </AppContext.Consumer>
                     <Router />
                 </AppProvider>
             </SafeAreaView>

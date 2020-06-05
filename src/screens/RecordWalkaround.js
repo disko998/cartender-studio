@@ -11,7 +11,7 @@ import { AppContext } from '../context/AppProvider'
 function RecordWalkaround({ navigation }) {
     const {
         data: { currentVideo },
-        actions: { generateVideo },
+        actions: { generateVideo, showLoading, hideLoading },
     } = React.useContext(AppContext)
 
     const [form, setForm] = React.useState({
@@ -42,7 +42,19 @@ function RecordWalkaround({ navigation }) {
     )
 
     const onGenerateVideo = async () => {
-        generateVideo(form)
+        try {
+            showLoading()
+            await generateVideo(form)
+            navigation.goBack()
+        } catch (error) {
+            if (error.message === 'not valid') {
+                return
+            } else {
+                alert(error.message)
+            }
+        } finally {
+            hideLoading()
+        }
     }
 
     return (

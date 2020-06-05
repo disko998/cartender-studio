@@ -6,11 +6,15 @@ import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommun
 import Color from '../constants/Colors'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
+const defaultThumb = require('../assets/images/default_thumbnail.jpg')
+
 function VideoCard({ thumbnail, title, details, onPlay, onShare }) {
+    const src = thumbnail ? { uri: thumbnail } : defaultThumb
+
     return (
         <ImageBackground
             style={styles.container}
-            source={{ uri: thumbnail }}
+            source={src}
             resizeMode='cover'
         >
             <View style={styles.cardBody}>
