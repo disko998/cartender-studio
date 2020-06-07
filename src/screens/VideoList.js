@@ -57,7 +57,9 @@ export default function VideoList({ navigation }) {
         <SafeAreaView style={styles.container}>
             <FlatList
                 data={projects.projects.filter(
-                    i => i['render-status'] === 'finished',
+                    i =>
+                        i['render-status'] === 'finished' &&
+                        i.template.template === 'CT_Walkaround',
                 )}
                 renderItem={({ item }) => (
                     <VideoCard

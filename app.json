@@ -1,27 +1,34 @@
 {
-    "expo": {
-        "name": "Sales Studio",
-        "slug": "SalesStudio",
-        "platforms": ["ios", "android", "web"],
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./src/assets/images/icon.png",
-        "scheme": "myapp",
-        "splash": {
-            "image": "./src/assets/images/logo.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#ffffff"
-        },
-        "updates": {
-            "fallbackToCacheTimeout": 0
-        },
-        "assetBundlePatterns": ["**/*"],
-        "ios": {
-            "supportsTablet": true,
-            "requireFullScreen": true
-        },
-        "web": {
-            "favicon": "./src/assets/images/logo.jpg"
-        }
-    }
+  "expo": {
+    "name": "Sales Studio",
+    "slug": "SalesStudio",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/images/icon.png",
+    "scheme": "myapp",
+    "splash": {
+      "image": "./src/assets/images/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "requireFullScreen": true
+    },
+    "web": {
+      "favicon": "./src/assets/images/logo.jpg"
+    },
+    "description": ""
+  }
 }

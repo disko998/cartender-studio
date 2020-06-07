@@ -81,8 +81,8 @@ export default class AppProvider extends Component {
             'vehicle-details': details,
             'vehicle-vin': vin,
             'video-clip1': Intro,
-            'video-clip2': Interior,
-            'video-clip3': Exterior,
+            'video-clip2': Exterior,
+            'video-clip3': Interior,
             'video-clip4': Outro,
             output: `${title} ${vin}`,
         }
@@ -188,7 +188,7 @@ export default class AppProvider extends Component {
             showLoading,
         } = this
 
-        console.log('State', this.state)
+        __DEV__ && console.log('State', this.state)
 
         return (
             <Provider
