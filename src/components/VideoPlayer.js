@@ -1,30 +1,12 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Video } from 'expo-av'
-import * as ScreenOrientation from 'expo-screen-orientation'
 
 import Layout from '../constants/Layout'
 import Color from '../constants/Colors'
 
 export default function VideoPlayer({ src, containerStyle, ...props }) {
     const videoRef = React.useRef()
-
-    const onFullScreen = React.useMemo(
-        () => ({ fullscreenUpdate }) => {
-            if (
-                fullscreenUpdate === Video.FULLSCREEN_UPDATE_PLAYER_WILL_PRESENT
-            ) {
-                ScreenOrientation.unlockAsync()
-            } else if (
-                fullscreenUpdate === Video.FULLSCREEN_UPDATE_PLAYER_WILL_DISMISS
-            ) {
-                ScreenOrientation.lockAsync(
-                    ScreenOrientation.OrientationLock.PORTRAIT,
-                )
-            }
-        },
-        [],
-    )
 
     return (
         <View style={[styles.container, containerStyle]}>
@@ -39,7 +21,6 @@ export default function VideoPlayer({ src, containerStyle, ...props }) {
                 style={styles.video}
                 useNativeControls={true}
                 {...props}
-                onFullscreenUpdate={onFullScreen}
             />
         </View>
     )

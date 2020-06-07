@@ -16,13 +16,13 @@ import { AppContext } from '../context/AppProvider'
 export default function VideoList({ navigation }) {
     const {
         data: { projects },
-        actions: { onShare, getVideos },
+        actions: { onShare, getProjects },
     } = React.useContext(AppContext)
 
     React.useEffect(() => {
         ;(async () => {
             try {
-                await getVideos()
+                await getProjects()
             } catch (error) {
                 alert(error.message)
             }
@@ -34,6 +34,7 @@ export default function VideoList({ navigation }) {
             title: item['vehicle-title'],
             details: item['vehicle-details'],
             video: item['s3_url'],
+            poster: { uri: item['vehicle-image'] },
         })
     }
 

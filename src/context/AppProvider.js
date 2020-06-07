@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Share, AsyncStorage } from 'react-native'
 import { RNS3 } from 'react-native-aws3'
+import * as VideoThumbnails from 'expo-video-thumbnails'
 
 import { _DATA } from './_DATA'
 import { post, api, get } from '../api'
@@ -20,14 +21,14 @@ export default class AppProvider extends Component {
         user: null,
         projects: null,
         currentVideo: {
-            // Exterior:
-            //     'https://ct-sales-studio.s3.amazonaws.com/a384f275-cd2b-49d2-9990-f36c97af47ed.mp4',
-            // Interior:
-            //     'https://ct-sales-studio.s3.amazonaws.com/691eb6fb-1a9c-4790-b7b8-216d2551c5f2.mp4',
-            // Intro:
-            //     'https://ct-sales-studio.s3.amazonaws.com/11b7cb92-be93-4a08-9240-f30dd0a78c2c.mp4',
-            // Outro:
-            //     'https://ct-sales-studio.s3.amazonaws.com/b3890fe1-37e8-4788-ae14-1d63f68aa764.mp4',
+            Exterior:
+                'https://ct-sales-studio.s3.amazonaws.com/a384f275-cd2b-49d2-9990-f36c97af47ed.mp4',
+            Interior:
+                'https://ct-sales-studio.s3.amazonaws.com/691eb6fb-1a9c-4790-b7b8-216d2551c5f2.mp4',
+            Intro:
+                'https://ct-sales-studio.s3.amazonaws.com/11b7cb92-be93-4a08-9240-f30dd0a78c2c.mp4',
+            Outro:
+                'https://ct-sales-studio.s3.amazonaws.com/b3890fe1-37e8-4788-ae14-1d63f68aa764.mp4',
         },
     }
 
@@ -74,11 +75,16 @@ export default class AppProvider extends Component {
             throw new Error('not valid')
         }
 
+        const image = await this.generateThumbnail(Intro, 5000)
+
+        const thumbnail = await this.saveFileToS3(image)
+
         const postData = {
             'request-type': 'new',
             template: templates.walkaround,
             'vehicle-title': title,
             'vehicle-details': details,
+            'vehicle-image': thumbnail,
             'vehicle-vin': vin,
             'video-clip1': Intro,
             'video-clip2': Exterior,
@@ -86,6 +92,8 @@ export default class AppProvider extends Component {
             'video-clip4': Outro,
             output: `${title} ${vin}`,
         }
+
+        __DEV__ && console.log('POST DATA', postData)
 
         const res = await post(api.projects, postData, {
             Authorization: `Bearer ${this.state.user.token}`,
@@ -97,7 +105,7 @@ export default class AppProvider extends Component {
 
         __DEV__ && console.log(res)
 
-        this.getVideos()
+        this.getProjects()
 
         this.setState({
             ...this.state,
@@ -105,7 +113,7 @@ export default class AppProvider extends Component {
         })
     }
 
-    getVideos = async () => {
+    getProjects = async () => {
         const projects = await get(`${api.projects}?sort=-createDate`, {
             Authorization: `Bearer ${this.state.user.token}`,
         })
@@ -138,6 +146,34 @@ export default class AppProvider extends Component {
         } catch (error) {
             alert(error.message)
         }
+    }
+
+    generateThumbnail = async (video, time = 5000) => {
+        try {
+            const { uri } = await VideoThumbnails.getThumbnailAsync(video, {
+                time,
+            })
+            return uri
+        } catch (e) {
+            __DEV__ && console.warn(e)
+        }
+    }
+
+    saveFileToS3 = async uri => {
+        const uriFragments = uri.split('/')
+
+        const file = {
+            uri,
+            name: uriFragments[uriFragments.length - 1],
+            type: 'image/jpg',
+        }
+
+        const data = new FormData()
+        data.append('image', file)
+
+        const res = await RNS3.put(file, s3Options)
+
+        return res.body.postResponse.location
     }
 
     onStepFinish = async (stepName, uri) => {
@@ -180,12 +216,13 @@ export default class AppProvider extends Component {
         const {
             onShare,
             loginWithEmailAndPassword,
-            getVideos,
+            getProjects,
             generateVideo,
             onStepFinish,
             getCurrentUser,
             hideLoading,
             showLoading,
+            generateThumbnail,
         } = this
 
         __DEV__ && console.log('State', this.state)
@@ -197,12 +234,13 @@ export default class AppProvider extends Component {
                     actions: {
                         onShare,
                         loginWithEmailAndPassword,
-                        getVideos,
+                        getProjects,
                         generateVideo,
                         onStepFinish,
                         getCurrentUser,
                         showLoading,
                         hideLoading,
+                        generateThumbnail,
                     },
                 }}
             >

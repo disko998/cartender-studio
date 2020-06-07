@@ -3064,6 +3064,11 @@ expo-sqlite@~8.1.0:
     "@types/websql" "^0.0.27"
     lodash "^4.17.15"
 
+expo-video-thumbnails@~4.1.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/expo-video-thumbnails/-/expo-video-thumbnails-4.1.1.tgz#6baef6f45ad1930f1ee2396722a2b6a1158e850c"
+  integrity sha512-ABJ2eZ7C6N1NVFb9bJVcuTC862aSv/uZmXg5BHa8OC/sISN/qVut1S/+/Ti9jiMNQxwmKrSXPbMXXNb3ycArBw==
+
 expo-web-browser@~8.2.0, expo-web-browser@~8.2.1:
   version "8.2.1"
   resolved "https://registry.yarnpkg.com/expo-web-browser/-/expo-web-browser-8.2.1.tgz#993ba53371862ed85cfd277ba59a7004ed412905"

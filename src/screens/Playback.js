@@ -6,6 +6,8 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native'
+import * as ScreenOrientation from 'expo-screen-orientation'
+import { Video } from 'expo-av'
 import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import Color from '../constants/Colors'
@@ -17,7 +19,7 @@ function Playback({ route, navigation }) {
         actions: { onShare },
     } = React.useContext(AppContext)
 
-    const { title, details, video } = route.params
+    const { title, details, video, poster } = route.params
 
     React.useEffect(() => {
         navigation.setOptions({
@@ -32,9 +34,31 @@ function Playback({ route, navigation }) {
         [route.params],
     )
 
+    const onFullScreen = React.useMemo(
+        () => ({ fullscreenUpdate }) => {
+            if (
+                fullscreenUpdate === Video.FULLSCREEN_UPDATE_PLAYER_WILL_PRESENT
+            ) {
+                ScreenOrientation.unlockAsync()
+            } else if (
+                fullscreenUpdate === Video.FULLSCREEN_UPDATE_PLAYER_WILL_DISMISS
+            ) {
+                ScreenOrientation.lockAsync(
+                    ScreenOrientation.OrientationLock.PORTRAIT,
+                )
+            }
+        },
+        [],
+    )
+
     return (
         <ScrollView style={styles.container}>
-            <VideoPlayer src={video} />
+            <VideoPlayer
+                src={video}
+                usePoster={true}
+                posterSource={poster}
+                onFullscreenUpdate={onFullScreen}
+            />
 
             <View style={styles.contentWrapper}>
                 <Text style={styles.videoTitle}>{title}</Text>
