@@ -21,14 +21,14 @@ export default class AppProvider extends Component {
         user: null,
         projects: null,
         currentVideo: {
-            Exterior:
-                'https://ct-sales-studio.s3.amazonaws.com/a384f275-cd2b-49d2-9990-f36c97af47ed.mp4',
-            Interior:
-                'https://ct-sales-studio.s3.amazonaws.com/691eb6fb-1a9c-4790-b7b8-216d2551c5f2.mp4',
-            Intro:
-                'https://ct-sales-studio.s3.amazonaws.com/11b7cb92-be93-4a08-9240-f30dd0a78c2c.mp4',
-            Outro:
-                'https://ct-sales-studio.s3.amazonaws.com/b3890fe1-37e8-4788-ae14-1d63f68aa764.mp4',
+            // Exterior:
+            //     'https://ct-sales-studio.s3.amazonaws.com/a384f275-cd2b-49d2-9990-f36c97af47ed.mp4',
+            // Interior:
+            //     'https://ct-sales-studio.s3.amazonaws.com/691eb6fb-1a9c-4790-b7b8-216d2551c5f2.mp4',
+            // Intro:
+            //     'https://ct-sales-studio.s3.amazonaws.com/11b7cb92-be93-4a08-9240-f30dd0a78c2c.mp4',
+            // Outro:
+            //     'https://ct-sales-studio.s3.amazonaws.com/b3890fe1-37e8-4788-ae14-1d63f68aa764.mp4',
         },
     }
 
@@ -75,7 +75,7 @@ export default class AppProvider extends Component {
             throw new Error('not valid')
         }
 
-        const image = await this.generateThumbnail(Intro, 5000)
+        const image = await this.generateThumbnail(Intro, 500)
 
         const thumbnail = await this.saveFileToS3(image)
 
