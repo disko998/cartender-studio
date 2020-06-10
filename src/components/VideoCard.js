@@ -1,10 +1,15 @@
 import React from 'react'
-import { StyleSheet, View, ImageBackground, Text } from 'react-native'
+import {
+    StyleSheet,
+    View,
+    ImageBackground,
+    Text,
+    TouchableOpacity,
+} from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import Color from '../constants/Colors'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const defaultThumb = require('../assets/images/default_thumbnail.jpg')
 
@@ -12,48 +17,50 @@ function VideoCard({ thumbnail, title, details, onPlay, onShare }) {
     const src = thumbnail ? { uri: thumbnail } : defaultThumb
 
     return (
-        <ImageBackground
-            style={styles.container}
-            source={src}
-            resizeMode='cover'
-        >
-            <View style={styles.cardBody}>
-                <View style={styles.videoInformationStack}>
-                    <View style={styles.videoInformation}>
-                        <Text
-                            ellipsizeMode='tail'
-                            numberOfLines={1}
-                            style={styles.videoTitle}
-                        >
-                            {title}
-                        </Text>
-                        <Text
-                            ellipsizeMode='tail'
-                            numberOfLines={1}
-                            style={styles.videoDetails}
-                        >
-                            {details}
-                        </Text>
-                    </View>
-                    <View style={styles.rect}>
-                        <TouchableOpacity onPress={onPlay}>
-                            <EntypoIcon
-                                name='controller-play'
-                                size={60}
-                                color={Color.white}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={onShare}>
-                            <MaterialCommunityIconsIcon
-                                name='share'
-                                size={50}
-                                color={Color.white}
-                            />
-                        </TouchableOpacity>
+        <TouchableOpacity style={styles.container} onPress={onPlay}>
+            <ImageBackground
+                style={{ flex: 1 }}
+                source={src}
+                resizeMode='cover'
+            >
+                <View style={styles.cardBody}>
+                    <View style={styles.videoInformationStack}>
+                        <View style={styles.videoInformation}>
+                            <Text
+                                ellipsizeMode='tail'
+                                numberOfLines={1}
+                                style={styles.videoTitle}
+                            >
+                                {title}
+                            </Text>
+                            <Text
+                                ellipsizeMode='tail'
+                                numberOfLines={1}
+                                style={styles.videoDetails}
+                            >
+                                {details}
+                            </Text>
+                        </View>
+                        <View style={styles.rect}>
+                            <TouchableOpacity onPress={onPlay}>
+                                <EntypoIcon
+                                    name='controller-play'
+                                    size={60}
+                                    color={Color.white}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={onShare}>
+                                <MaterialCommunityIconsIcon
+                                    name='share'
+                                    size={50}
+                                    color={Color.white}
+                                />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
-        </ImageBackground>
+            </ImageBackground>
+        </TouchableOpacity>
     )
 }
 
