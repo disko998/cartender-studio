@@ -55,7 +55,7 @@ function Playback({ route, navigation }) {
         <ScrollView style={styles.container}>
             <VideoPlayer
                 src={video}
-                usePoster={true}
+                usePoster={false}
                 posterSource={poster}
                 onFullscreenUpdate={onFullScreen}
             />

@@ -93,7 +93,7 @@ export default class AppProvider extends Component {
             output: `${title} ${vin}`,
         }
 
-        __DEV__ && console.log('POST DATA', postData)
+        __DEV__ && console.log('GENERATE REQUEST', postData)
 
         const res = await post(api.projects, postData, {
             Authorization: `Bearer ${this.state.user.token}`,
@@ -103,7 +103,7 @@ export default class AppProvider extends Component {
             throw new Error(res.message)
         }
 
-        __DEV__ && console.log(res)
+        __DEV__ && console.log('POST PROJECT RESPONSE', res)
 
         this.getProjects()
 

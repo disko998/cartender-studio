@@ -12,6 +12,7 @@ import VideoCard from '../components/VideoCard'
 import Color from '../constants/Colors'
 import Routes from '../constants/Routes'
 import { AppContext } from '../context/AppProvider'
+import { pullingInterval } from '../constants/Settings'
 
 export default function VideoList({ navigation }) {
     const {
@@ -20,13 +21,17 @@ export default function VideoList({ navigation }) {
     } = React.useContext(AppContext)
 
     React.useEffect(() => {
+        let interval
         ;(async () => {
             try {
                 await getProjects()
+                interval = setInterval(getProjects, pullingInterval)
             } catch (error) {
                 alert(error.message)
+                clearInterval(interval)
             }
         })()
+        return () => clearInterval(interval)
     }, [])
 
     const navigateToPlayback = item => {
@@ -59,11 +64,12 @@ export default function VideoList({ navigation }) {
             <FlatList
                 data={projects.projects.filter(
                     i =>
-                        i['render-status'] === 'finished' &&
+                        i['render-status'] !== 'canceled' &&
                         i.template.template === 'CT_Walkaround',
                 )}
                 renderItem={({ item }) => (
                     <VideoCard
+                        status={item['render-status']}
                         title={item['vehicle-title']}
                         details={item['vehicle-details']}
                         thumbnail={item['vehicle-image']}

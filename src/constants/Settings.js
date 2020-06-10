@@ -1,3 +1,5 @@
+export const pullingInterval = 10000
+
 export const recordingDuration = {
     INTRO: 15,
     EXTERIOR: 30,
