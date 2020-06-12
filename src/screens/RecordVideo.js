@@ -34,6 +34,7 @@ export default function RecordVideo({ route, navigation }) {
             headerShown: false,
         })
 
+        // ScreenOrientation.unlockAsync()
         ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
 
         return () => {

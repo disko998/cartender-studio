@@ -18,8 +18,6 @@ export default function Counter({ duration, start }) {
         return () => clearInterval(interval)
     }, [counter, start, duration])
 
-    console.log(counter)
-
     return (
         <Text style={styles.timer}>{`Time Remaining: ${
             counter < 10 ? `0${counter}` : counter

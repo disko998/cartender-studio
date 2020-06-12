@@ -21,7 +21,7 @@ export default function ConfirmControls({
                 ]}
             />
 
-            <TouchableOpacity onPress={onFlip}>
+            <TouchableOpacity onPress={onFlip} disabled={isRecording}>
                 <Ionicons
                     name={'ios-reverse-camera'}
                     size={40}
