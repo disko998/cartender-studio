@@ -34,7 +34,6 @@ export default function RecordVideo({ route, navigation }) {
             headerShown: false,
         })
 
-        // ScreenOrientation.unlockAsync()
         ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
 
         return () => {
@@ -43,10 +42,6 @@ export default function RecordVideo({ route, navigation }) {
             )
         }
     }, [])
-
-    if (!hasPermission) {
-        return <Text>No access to camera</Text>
-    }
 
     const onFlip = () => {
         setType(
@@ -89,7 +84,14 @@ export default function RecordVideo({ route, navigation }) {
             alert(error.message)
         } finally {
             hideLoading()
+            ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.PORTRAIT,
+            )
         }
+    }
+
+    if (!hasPermission) {
+        return <Text>No access to camera</Text>
     }
 
     return (
@@ -144,17 +146,3 @@ const styles = StyleSheet.create({
         width: '100%',
     },
 })
-
-// IF WE NEED PORTRAIT
-// const [direction, setDirection] = useState(null)
-// ScreenOrientation.addOrientationChangeListener(oInfo => {
-//     const orientation = oInfo.orientationInfo.orientation
-//     if (
-//         orientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-//         orientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-//     ) {
-//         setDirection('row')
-//     } else {
-//         setDirection('column')
-//     }
-// })
