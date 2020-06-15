@@ -77,6 +77,9 @@ export default function RecordVideo({ route, navigation }) {
         try {
             showLoading()
             await onStepFinish(stepName, video.uri)
+            await ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.PORTRAIT_UP,
+            )
             navigation.goBack()
         } catch (error) {
             alert(error.message)
