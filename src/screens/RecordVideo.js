@@ -37,9 +37,7 @@ export default function RecordVideo({ route, navigation }) {
         ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
 
         return () => {
-            ScreenOrientation.lockAsync(
-                ScreenOrientation.OrientationLock.PORTRAIT,
-            )
+            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
         }
     }, [])
 
@@ -79,14 +77,14 @@ export default function RecordVideo({ route, navigation }) {
         try {
             showLoading()
             await onStepFinish(stepName, video.uri)
+            await ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.PORTRAIT_UP,
+            )
             navigation.goBack()
         } catch (error) {
             alert(error.message)
         } finally {
             hideLoading()
-            ScreenOrientation.lockAsync(
-                ScreenOrientation.OrientationLock.PORTRAIT,
-            )
         }
     }
 
@@ -107,10 +105,7 @@ export default function RecordVideo({ route, navigation }) {
                         duration={duration}
                     />
                 ) : (
-                    <VideoPlayer
-                        src={video.uri}
-                        containerStyle={styles.videoPlayer}
-                    />
+                    <VideoPlayer src={video.uri} containerStyle={styles.videoPlayer} />
                 )}
             </View>
 
@@ -123,10 +118,7 @@ export default function RecordVideo({ route, navigation }) {
                         onRecord={onRecord}
                     />
                 ) : (
-                    <ConfirmControls
-                        onConfirm={onConfirm}
-                        onReject={onReject}
-                    />
+                    <ConfirmControls onConfirm={onConfirm} onReject={onReject} />
                 )}
             </View>
         </View>
