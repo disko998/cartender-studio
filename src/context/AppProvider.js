@@ -71,8 +71,14 @@ export default class AppProvider extends Component {
     generateVideo = async ({ vin, title, details }) => {
         const { Intro, Interior, Exterior, Outro } = this.state.currentVideo
 
-        if (!(vin && title && details) || !(Intro, Interior, Exterior, Outro)) {
-            throw new Error('not valid')
+        if (!(vin && title && details)) {
+            throw new Error('Please fill out the form')
+        }
+
+        if (!(Intro, Interior, Exterior, Outro)) {
+            throw new Error(
+                'You must record a clip for each segment before generating a video',
+            )
         }
 
         const image = await this.generateThumbnail(Intro, 500)

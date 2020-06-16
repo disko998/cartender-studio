@@ -47,11 +47,7 @@ function RecordWalkaround({ navigation }) {
             await generateVideo(form)
             navigation.goBack()
         } catch (error) {
-            if (error.message === 'not valid') {
-                return
-            } else {
-                alert(error.message)
-            }
+            alert(error.message)
         } finally {
             hideLoading()
         }
