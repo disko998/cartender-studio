@@ -194,10 +194,7 @@ export default class AppProvider extends Component {
             type: 'video/mp4',
         }
 
-        const data = new FormData()
-        data.append('video', file)
-
-        __DEV__ && console.log(data)
+        __DEV__ && console.log('FILE', file)
 
         const res = await RNS3.put(file, s3Options)
 
@@ -243,7 +240,7 @@ export default class AppProvider extends Component {
         __DEV__ && console.log('Video chosen', result)
 
         if (result.cancelled) {
-            return
+            return null
         }
 
         if (result.duration > duration) {

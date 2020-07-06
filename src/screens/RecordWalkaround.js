@@ -56,8 +56,10 @@ function RecordWalkaround({ navigation }) {
                 const video = await pickVideoFromLibrary(
                     selectedStep.duration * 1000,
                 )
-                showLoading()
-                await onStepFinish(selectedStep.stepName, video.uri)
+                if (video) {
+                    showLoading()
+                    await onStepFinish(selectedStep.stepName, video.uri)
+                }
             } catch (error) {
                 alert(error.message)
             } finally {
