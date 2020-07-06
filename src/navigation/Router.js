@@ -54,10 +54,10 @@ export function BottomTabNavigator({ navigation, route }) {
             inactiveColor={Color.darkGray}
         >
             <BottomTab.Screen
-                name='Walkaround'
+                name={Routes.WALKAROUND}
                 component={VideoList}
                 options={{
-                    title: 'Walkaround',
+                    title: Routes.WALKAROUND,
                     tabBarIcon: ({ focused, color }) => (
                         <MaterialCommunityIconsIcon
                             name='car'
@@ -68,10 +68,10 @@ export function BottomTabNavigator({ navigation, route }) {
                 }}
             />
             <BottomTab.Screen
-                name='Inspections'
+                name={Routes.INSPECTION}
                 component={inDevelopmentScreen}
                 options={{
-                    title: 'Inspections',
+                    title: Routes.INSPECTION,
                     tabBarIcon: ({ focused, color }) => (
                         <MaterialCommunityIconsIcon
                             name='wrench'
@@ -82,10 +82,10 @@ export function BottomTabNavigator({ navigation, route }) {
                 }}
             />
             <BottomTab.Screen
-                name='Greetings'
+                name={Routes.GREETING}
                 component={inDevelopmentScreen}
                 options={{
-                    title: 'Greetings',
+                    title: Routes.GREETING,
                     tabBarIcon: ({ focused, color }) => (
                         <MaterialCommunityIconsIcon
                             name='account-heart'
