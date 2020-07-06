@@ -21,7 +21,16 @@ export default function App() {
                 />
                 <AppProvider>
                     <AppContext.Consumer>
-                        {state => <Spinner visible={state.data.loading} />}
+                        {state => (
+                            <Spinner
+                                visible={state.data.loading}
+                                textContent='Uploading...please wait'
+                                color={Color.white}
+                                textStyle={{ color: Color.white }}
+                                animation='fade'
+                                overlayColor='rgba(0,0,0,.5)'
+                            />
+                        )}
                     </AppContext.Consumer>
                     <Router />
                 </AppProvider>
