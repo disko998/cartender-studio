@@ -1,5 +1,12 @@
 import React from 'react'
-import { StyleSheet, ScrollView, Text } from 'react-native'
+import {
+    StyleSheet,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native'
+import { Overlay } from 'react-native-elements'
 
 import Color from '../constants/Colors'
 import BorderInput from '../components/BorderInput'
@@ -14,6 +21,7 @@ function RecordWalkaround({ navigation }) {
         actions: { generateVideo, showLoading, hideLoading },
     } = React.useContext(AppContext)
 
+    const [selectedStep, setSelectedStep] = React.useState(null)
     const [form, setForm] = React.useState({
         vin: '',
         title: '',
@@ -30,13 +38,18 @@ function RecordWalkaround({ navigation }) {
 
     const navigateToRecordingScreen = React.useMemo(
         () => (duration, stepName) => {
-            navigation.navigate(
-                Routes.CAMERA,
-                JSON.stringify({
-                    duration,
-                    stepName,
-                }),
-            )
+            navigation.navigate(Routes.CAMERA, JSON.stringify(selectedStep))
+            setSelectedStep(null)
+        },
+        [selectedStep],
+    )
+
+    const onStepPress = React.useMemo(
+        () => (duration, stepName) => {
+            setSelectedStep({
+                duration,
+                stepName,
+            })
         },
         [],
     )
@@ -77,40 +90,28 @@ function RecordWalkaround({ navigation }) {
                 title={`Step 1: ${steps.INTRO}`}
                 success={!!currentVideo[steps.INTRO]}
                 onPress={() =>
-                    navigateToRecordingScreen(
-                        recordingDuration.INTRO,
-                        steps.INTRO,
-                    )
+                    onStepPress(recordingDuration.INTRO, steps.INTRO)
                 }
             />
             <StepButton
                 title={`Step 2: ${steps.EXTERIOR}`}
                 success={!!currentVideo[steps.EXTERIOR]}
                 onPress={() =>
-                    navigateToRecordingScreen(
-                        recordingDuration.EXTERIOR,
-                        steps.EXTERIOR,
-                    )
+                    onStepPress(recordingDuration.EXTERIOR, steps.EXTERIOR)
                 }
             />
             <StepButton
                 title={`Step 3: ${steps.INTERIOR}`}
                 success={!!currentVideo[steps.INTERIOR]}
                 onPress={() =>
-                    navigateToRecordingScreen(
-                        recordingDuration.INTERIOR,
-                        steps.INTERIOR,
-                    )
+                    onStepPress(recordingDuration.INTERIOR, steps.INTERIOR)
                 }
             />
             <StepButton
                 title={`Step 4: ${steps.OUTRO}`}
                 success={!!currentVideo[steps.OUTRO]}
                 onPress={() =>
-                    navigateToRecordingScreen(
-                        recordingDuration.OUTRO,
-                        steps.OUTRO,
-                    )
+                    onStepPress(recordingDuration.OUTRO, steps.OUTRO)
                 }
             />
             <StepButton
@@ -118,6 +119,31 @@ function RecordWalkaround({ navigation }) {
                 style={styles.generateButton}
                 onPress={onGenerateVideo}
             />
+
+            <Overlay
+                isVisible={Boolean(selectedStep)}
+                onBackdropPress={() => setSelectedStep(null)}
+            >
+                <View>
+                    <Text style={styles.overlayTitle}>
+                        {selectedStep && selectedStep.stepName}:
+                    </Text>
+                    <TouchableOpacity
+                        style={styles.overlayButton}
+                        onPress={() => alert(selectedStep.stepName)}
+                    >
+                        <Text style={styles.overlayText}>
+                            Choose from library
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.overlayButton}
+                        onPress={navigateToRecordingScreen}
+                    >
+                        <Text style={styles.overlayText}>Record new clip</Text>
+                    </TouchableOpacity>
+                </View>
+            </Overlay>
         </ScrollView>
     )
 }
@@ -139,6 +165,21 @@ const styles = StyleSheet.create({
         backgroundColor: Color.mainBlue,
         borderRadius: 10,
         marginBottom: 30,
+    },
+    overlayButton: {
+        padding: 15,
+    },
+    overlayText: {
+        color: Color.mainBlue,
+        fontFamily: 'roboto-700',
+        textTransform: 'uppercase',
+    },
+    overlayTitle: {
+        color: Color.dark,
+        fontFamily: 'roboto-700',
+        fontSize: 17,
+        textAlign: 'center',
+        marginBottom: 10,
     },
 })
 
