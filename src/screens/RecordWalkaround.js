@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-    StyleSheet,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native'
+import { StyleSheet, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Overlay } from 'react-native-elements'
 
 import Color from '../constants/Colors'
@@ -53,18 +47,19 @@ function RecordWalkaround({ navigation }) {
     const chooseVideo = React.useMemo(
         () => async () => {
             try {
-                const video = await pickVideoFromLibrary(
-                    selectedStep.duration * 1000,
-                )
+                const video = await pickVideoFromLibrary(selectedStep.duration * 1000)
+                const stepName = selectedStep.stepName
+                setSelectedStep(null)
+
                 if (video) {
                     showLoading()
-                    await onStepFinish(selectedStep.stepName, video.uri)
+                    await onStepFinish(stepName, video.uri)
                 }
             } catch (error) {
+                setSelectedStep(null)
                 alert(error.message)
             } finally {
                 hideLoading()
-                setSelectedStep(null)
             }
         },
         [selectedStep],
@@ -109,36 +104,26 @@ function RecordWalkaround({ navigation }) {
                 value={form.details}
                 onChangeText={value => setForm({ ...form, details: value })}
             />
-            <Text style={styles.text}>
-                Select or Record Your Video Segments
-            </Text>
+            <Text style={styles.text}>Select or Record Your Video Segments</Text>
             <StepButton
                 title={`Step 1: ${steps.INTRO}`}
                 success={!!currentVideo[steps.INTRO]}
-                onPress={() =>
-                    onStepPress(recordingDuration.INTRO, steps.INTRO)
-                }
+                onPress={() => onStepPress(recordingDuration.INTRO, steps.INTRO)}
             />
             <StepButton
                 title={`Step 2: ${steps.EXTERIOR}`}
                 success={!!currentVideo[steps.EXTERIOR]}
-                onPress={() =>
-                    onStepPress(recordingDuration.EXTERIOR, steps.EXTERIOR)
-                }
+                onPress={() => onStepPress(recordingDuration.EXTERIOR, steps.EXTERIOR)}
             />
             <StepButton
                 title={`Step 3: ${steps.INTERIOR}`}
                 success={!!currentVideo[steps.INTERIOR]}
-                onPress={() =>
-                    onStepPress(recordingDuration.INTERIOR, steps.INTERIOR)
-                }
+                onPress={() => onStepPress(recordingDuration.INTERIOR, steps.INTERIOR)}
             />
             <StepButton
                 title={`Step 4: ${steps.OUTRO}`}
                 success={!!currentVideo[steps.OUTRO]}
-                onPress={() =>
-                    onStepPress(recordingDuration.OUTRO, steps.OUTRO)
-                }
+                onPress={() => onStepPress(recordingDuration.OUTRO, steps.OUTRO)}
             />
             <StepButton
                 title='GENERATE VIDEO'
@@ -154,13 +139,8 @@ function RecordWalkaround({ navigation }) {
                     <Text style={styles.overlayTitle}>
                         {selectedStep && selectedStep.stepName}:
                     </Text>
-                    <TouchableOpacity
-                        style={styles.overlayButton}
-                        onPress={chooseVideo}
-                    >
-                        <Text style={styles.overlayText}>
-                            Choose from library
-                        </Text>
+                    <TouchableOpacity style={styles.overlayButton} onPress={chooseVideo}>
+                        <Text style={styles.overlayText}>Choose from library</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.overlayButton}
