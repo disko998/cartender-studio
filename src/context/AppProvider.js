@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { Share, AsyncStorage } from 'react-native'
 import { RNS3 } from 'react-native-aws3'
 import * as VideoThumbnails from 'expo-video-thumbnails'
+import * as ImagePicker from 'expo-image-picker'
+import Constants from 'expo-constants'
+import * as Permissions from 'expo-permissions'
 
 import { _DATA } from './_DATA'
 import { post, api, get } from '../api'
@@ -202,7 +205,7 @@ export default class AppProvider extends Component {
 
         const stepVideo = { [stepName]: videoUrl }
 
-        __DEV__ && console.log(stepVideo)
+        __DEV__ && console.log('S3 VIDEO', stepVideo)
 
         this.setState({
             ...this.state,
@@ -218,6 +221,40 @@ export default class AppProvider extends Component {
         this.setState({ ...this.state, loading: false })
     }
 
+    pickVideoFromLibrary = async (duration = 15000) => {
+        if (Constants.platform.ios) {
+            const { status } = await Permissions.askAsync(
+                Permissions.CAMERA_ROLL,
+            )
+            if (status !== 'granted') {
+                throw new Error(
+                    `Sorry, we need camera roll permissions to make this work!`,
+                )
+            }
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+            quality: 0.5,
+            videoExportPreset: ImagePicker.VideoExportPreset.MediumQuality,
+            allowsEditing: true,
+        })
+
+        __DEV__ && console.log('Video chosen', result)
+
+        if (result.cancelled) {
+            return
+        }
+
+        if (result.duration > duration) {
+            throw new Error(
+                `Video is to big! ${result.duration}ms. Max allowed ${duration}ms`,
+            )
+        }
+
+        return result
+    }
+
     render() {
         const {
             onShare,
@@ -229,6 +266,7 @@ export default class AppProvider extends Component {
             hideLoading,
             showLoading,
             generateThumbnail,
+            pickVideoFromLibrary,
         } = this
 
         __DEV__ && console.log('State', this.state)
@@ -247,6 +285,7 @@ export default class AppProvider extends Component {
                         showLoading,
                         hideLoading,
                         generateThumbnail,
+                        pickVideoFromLibrary,
                     },
                 }}
             >

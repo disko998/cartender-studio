@@ -18,7 +18,13 @@ import { AppContext } from '../context/AppProvider'
 function RecordWalkaround({ navigation }) {
     const {
         data: { currentVideo },
-        actions: { generateVideo, showLoading, hideLoading },
+        actions: {
+            generateVideo,
+            showLoading,
+            hideLoading,
+            pickVideoFromLibrary,
+            onStepFinish,
+        },
     } = React.useContext(AppContext)
 
     const [selectedStep, setSelectedStep] = React.useState(null)
@@ -37,9 +43,27 @@ function RecordWalkaround({ navigation }) {
     }, [])
 
     const navigateToRecordingScreen = React.useMemo(
-        () => (duration, stepName) => {
+        () => () => {
             navigation.navigate(Routes.CAMERA, JSON.stringify(selectedStep))
             setSelectedStep(null)
+        },
+        [selectedStep],
+    )
+
+    const chooseVideo = React.useMemo(
+        () => async () => {
+            try {
+                const video = await pickVideoFromLibrary(
+                    selectedStep.duration * 1000,
+                )
+                showLoading()
+                await onStepFinish(selectedStep.stepName, video.uri)
+            } catch (error) {
+                alert(error.message)
+            } finally {
+                hideLoading()
+                setSelectedStep(null)
+            }
         },
         [selectedStep],
     )
@@ -130,7 +154,7 @@ function RecordWalkaround({ navigation }) {
                     </Text>
                     <TouchableOpacity
                         style={styles.overlayButton}
-                        onPress={() => alert(selectedStep.stepName)}
+                        onPress={chooseVideo}
                     >
                         <Text style={styles.overlayText}>
                             Choose from library
