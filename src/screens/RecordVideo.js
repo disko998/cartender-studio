@@ -121,6 +121,7 @@ export default function RecordVideo({ route, navigation }) {
                         step={stepName}
                         onFlip={onFlip}
                         onRecord={onRecord}
+                        onExit={navigation.goBack}
                     />
                 ) : (
                     <ConfirmControls

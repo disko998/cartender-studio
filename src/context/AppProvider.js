@@ -90,6 +90,7 @@ export default class AppProvider extends Component {
 
         const postData = {
             'request-type': 'new',
+            'data-source': 'mobile-app',
             template: templates.walkaround,
             'vehicle-title': title,
             'vehicle-details': details,
@@ -220,7 +221,9 @@ export default class AppProvider extends Component {
 
     pickVideoFromLibrary = async (duration = 15000) => {
         if (Constants.platform.ios) {
-            const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+            const { status } = await Permissions.askAsync(
+                Permissions.CAMERA_ROLL,
+            )
             if (status !== 'granted') {
                 throw new Error(
                     `Sorry, we need camera roll permissions to make this work!`,
