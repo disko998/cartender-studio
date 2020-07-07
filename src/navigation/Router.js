@@ -27,7 +27,14 @@ function inDevelopmentScreen({ route, navigation }) {
         <View
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
         >
-            <Text style={{ marginBottom: 15, color: '#000', fontSize: 20 }}>
+            <Text
+                style={{
+                    marginBottom: 15,
+                    color: '#000',
+                    fontSize: 20,
+                    textAlign: 'center',
+                }}
+            >
                 {`${route.name} Screen in development`}
             </Text>
             <Button onPress={() => navigation.goBack()} title='Go back' />
@@ -36,20 +43,41 @@ function inDevelopmentScreen({ route, navigation }) {
 }
 
 export function BottomTabNavigator({ navigation, route }) {
-    // set nav options here stupid
-
-    let tabName = 'Walkaround'
+    let tabName = Routes.WALKAROUND
     if (route.state) {
         tabName = route.state.routeNames[route.state.index]
     }
 
+    let routeName = ''
+
+    switch (tabName) {
+        case Routes.WALKAROUND:
+            routeName = Routes.RECORD_WALKAROUND
+            break
+        case Routes.GREETING:
+            routeName = Routes.RECORD_GREETING
+            break
+        case Routes.INSPECTION:
+            routeName = Routes.RECORD_INSPECTION
+            break
+        default:
+            routeName = tabName
+            break
+    }
+
     navigation.setOptions({
         headerTitle: `${tabName} Videos`,
+        headerRight: ({ focused }) => (
+            <CameraButton
+                style={{ marginRight: 15 }}
+                onPress={() => navigation.navigate(routeName)}
+            />
+        ),
     })
 
     return (
         <BottomTab.Navigator
-            initialRouteName={'Walkaround'}
+            initialRouteName={Routes.WALKAROUND}
             activeColor={Color.mainBlue}
             inactiveColor={Color.darkGray}
         >
@@ -128,14 +156,6 @@ export function HomeNavigation({ navigation }) {
                     fontFamily: 'roboto-700',
                     color: Color.black,
                 },
-                headerRight: ({ focused }) => (
-                    <CameraButton
-                        style={{ marginRight: 15 }}
-                        onPress={() =>
-                            navigation.navigate(Routes.RECORD_WALKAROUND)
-                        }
-                    />
-                ),
             }}
         >
             <HomeStack.Screen
@@ -145,6 +165,15 @@ export function HomeNavigation({ navigation }) {
             <RecordingStack.Screen
                 name={Routes.RECORD_WALKAROUND}
                 component={RecordWalkaround}
+            />
+            <RecordingStack.Screen
+                name={Routes.RECORD_INSPECTION}
+                component={inDevelopmentScreen}
+            />
+
+            <RecordingStack.Screen
+                name={Routes.RECORD_GREETING}
+                component={inDevelopmentScreen}
             />
             <HomeStack.Screen name={Routes.CAMERA} component={RecordVideo} />
             <HomeStack.Screen name={Routes.PLAYBACK} component={Playback} />
