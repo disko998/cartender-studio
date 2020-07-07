@@ -13,7 +13,7 @@ import { s3Options, templates } from '../constants/Settings'
 export const AppContext = React.createContext()
 export const Provider = AppContext.Provider
 
-const myCred = {
+const devCredentials = {
     email: 'disko998@gmail.com',
     password: '697971a5294079197abe596f57f425fd',
 }
@@ -200,11 +200,53 @@ export default class AppProvider extends Component {
             throw new Error('Uploading to S3 failed')
         }
 
-        const stepVideo = { [stepName]: url }
+        this.setState({
+            ...this.state,
+            currentVideo: { ...this.state.currentVideo, [stepName]: url },
+        })
+    }
+
+    generateInspectionVideo = async ({ title }) => {
+        const video = this.state.inspection.currentVideo
+
+        if (!title) {
+            throw new Error('Please fill out the form')
+        }
+
+        if (!video) {
+            throw new Error('You must record a clip before generating a video')
+        }
+
+        const imagePath = await this.generateThumbnail(video, 500)
+        const thumbnail = await this.saveFileToS3(imagePath, 'image/jpg')
+
+        const postData = {
+            'request-type': 'new',
+            'data-source': 'mobile-app',
+            template: templates.inspection,
+            'vehicle-title': title,
+            'vehicle-image': thumbnail,
+            'video-clip1': video,
+            output: title,
+        }
+
+        __DEV__ && console.log('POST request', postData)
+
+        const res = await post(api.projects, postData, {
+            Authorization: `Bearer ${this.state.user.token}`,
+        })
+
+        __DEV__ && console.log('POST response', res)
+
+        if (res.message) {
+            throw new Error(res.message)
+        }
+
+        this.getProjects()
 
         this.setState({
             ...this.state,
-            currentVideo: { ...this.state.currentVideo, ...stepVideo },
+            currentVideo: {},
         })
     }
 
@@ -274,6 +316,7 @@ export default class AppProvider extends Component {
             generateThumbnail,
             pickVideoFromLibrary,
             setInspectionVideo,
+            generateInspectionVideo,
         } = this
 
         __DEV__ && console.log('State', this.state)
@@ -294,6 +337,7 @@ export default class AppProvider extends Component {
                         generateThumbnail,
                         pickVideoFromLibrary,
                         setInspectionVideo,
+                        generateInspectionVideo,
                     },
                 }}
             >

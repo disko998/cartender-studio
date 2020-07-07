@@ -30,7 +30,7 @@ function RecordWalkaround({ navigation, route }) {
 
     React.useEffect(() => {
         navigation.setOptions({
-            headerTitle: `Record ${route.name}`,
+            headerTitle: route.name,
             headerRight: null,
             headerTitleAlign: 'center',
         })

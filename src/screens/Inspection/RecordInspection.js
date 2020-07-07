@@ -13,7 +13,7 @@ function RecordInspection({ navigation, route }) {
     const {
         data: { inspection },
         actions: {
-            generateVideo,
+            generateInspectionVideo,
             showLoading,
             hideLoading,
             pickVideoFromLibrary,
@@ -84,7 +84,7 @@ function RecordInspection({ navigation, route }) {
     const onGenerateVideo = async () => {
         try {
             showLoading()
-            await generateVideo(form)
+            await generateInspectionVideo(form)
             navigation.goBack()
         } catch (error) {
             alert(error.message)

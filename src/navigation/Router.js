@@ -44,7 +44,7 @@ function inDevelopmentScreen({ route, navigation }) {
 }
 
 export function BottomTabNavigator({ navigation, route }) {
-    let initialRoute = Routes.INSPECTION
+    let initialRoute = Routes.WALKAROUND
     if (route.state) {
         initialRoute = route.state.routeNames[route.state.index]
     }
