@@ -33,6 +33,9 @@ export default class AppProvider extends Component {
             // Outro:
             //     'https://ct-sales-studio.s3.amazonaws.com/b3890fe1-37e8-4788-ae14-1d63f68aa764.mp4',
         },
+        inspection: {
+            currentVideo: null,
+        },
     }
 
     loginWithEmailAndPassword = async (email, password) => {
@@ -68,58 +71,6 @@ export default class AppProvider extends Component {
         this.setState({
             ...this.state,
             user: { ...userData.user, token },
-        })
-    }
-
-    generateVideo = async ({ vin, title, details }) => {
-        const { Intro, Interior, Exterior, Outro } = this.state.currentVideo
-
-        if (!(vin && title && details)) {
-            throw new Error('Please fill out the form')
-        }
-
-        if (!(Intro, Interior, Exterior, Outro)) {
-            throw new Error(
-                'You must record a clip for each segment before generating a video',
-            )
-        }
-
-        const image = await this.generateThumbnail(Intro, 500)
-
-        const thumbnail = await this.saveFileToS3(image)
-
-        const postData = {
-            'request-type': 'new',
-            'data-source': 'mobile-app',
-            template: templates.walkaround,
-            'vehicle-title': title,
-            'vehicle-details': details,
-            'vehicle-image': thumbnail,
-            'vehicle-vin': vin,
-            'video-clip1': Intro,
-            'video-clip2': Exterior,
-            'video-clip3': Interior,
-            'video-clip4': Outro,
-            output: `${title} ${vin}`,
-        }
-
-        __DEV__ && console.log('GENERATE REQUEST', postData)
-
-        const res = await post(api.projects, postData, {
-            Authorization: `Bearer ${this.state.user.token}`,
-        })
-
-        if (res.message) {
-            throw new Error(res.message)
-        }
-
-        __DEV__ && console.log('POST PROJECT RESPONSE', res)
-
-        this.getProjects()
-
-        this.setState({
-            ...this.state,
-            currentVideo: {},
         })
     }
 
@@ -169,46 +120,20 @@ export default class AppProvider extends Component {
         }
     }
 
-    saveFileToS3 = async uri => {
+    saveFileToS3 = async (uri, type) => {
         const uriFragments = uri.split('/')
 
         const file = {
             uri,
             name: uriFragments[uriFragments.length - 1],
-            type: 'image/jpg',
+            type: type,
         }
 
-        const data = new FormData()
-        data.append('image', file)
+        __DEV__ && console.log('FILE TO S3', file)
 
         const res = await RNS3.put(file, s3Options)
 
         return res.body.postResponse.location
-    }
-
-    onStepFinish = async (stepName, uri) => {
-        const uriFragments = uri.split('/')
-
-        const file = {
-            uri,
-            name: uriFragments[uriFragments.length - 1],
-            type: 'video/mp4',
-        }
-
-        __DEV__ && console.log('FILE', file)
-
-        const res = await RNS3.put(file, s3Options)
-
-        const videoUrl = res.body.postResponse.location
-
-        const stepVideo = { [stepName]: videoUrl }
-
-        __DEV__ && console.log('S3 VIDEO', stepVideo)
-
-        this.setState({
-            ...this.state,
-            currentVideo: { ...this.state.currentVideo, ...stepVideo },
-        })
     }
 
     showLoading = () => {
@@ -253,18 +178,102 @@ export default class AppProvider extends Component {
         return result
     }
 
+    setInspectionVideo = async uri => {
+        const url = await this.saveFileToS3(uri, 'video/mp4')
+
+        __DEV__ && console.log('S3 url', url)
+
+        if (!url) {
+            throw new Error('Uploading to S3 failed')
+        }
+
+        this.setState({
+            ...this.state,
+            inspection: { ...this.state.inspection, currentVideo: url },
+        })
+    }
+
+    setWalkaroundStep = async (stepName, uri) => {
+        const url = await this.saveFileToS3(uri, 'video/mp4')
+
+        if (!url) {
+            throw new Error('Uploading to S3 failed')
+        }
+
+        const stepVideo = { [stepName]: url }
+
+        this.setState({
+            ...this.state,
+            currentVideo: { ...this.state.currentVideo, ...stepVideo },
+        })
+    }
+
+    // generate Walkaround Video
+    generateVideo = async ({ vin, title, details }) => {
+        const { Intro, Interior, Exterior, Outro } = this.state.currentVideo
+
+        if (!(vin && title && details)) {
+            throw new Error('Please fill out the form')
+        }
+
+        if (!(Intro, Interior, Exterior, Outro)) {
+            throw new Error(
+                'You must record a clip for each segment before generating a video',
+            )
+        }
+
+        const imagePath = await this.generateThumbnail(Intro, 500)
+
+        const thumbnail = await this.saveFileToS3(imagePath, 'image/jpg')
+
+        const postData = {
+            'request-type': 'new',
+            'data-source': 'mobile-app',
+            template: templates.walkaround,
+            'vehicle-title': title,
+            'vehicle-details': details,
+            'vehicle-image': thumbnail,
+            'vehicle-vin': vin,
+            'video-clip1': Intro,
+            'video-clip2': Exterior,
+            'video-clip3': Interior,
+            'video-clip4': Outro,
+            output: `${title} ${vin}`,
+        }
+
+        __DEV__ && console.log('GENERATE REQUEST', postData)
+
+        const res = await post(api.projects, postData, {
+            Authorization: `Bearer ${this.state.user.token}`,
+        })
+
+        if (res.message) {
+            throw new Error(res.message)
+        }
+
+        __DEV__ && console.log('POST PROJECT RESPONSE', res)
+
+        this.getProjects()
+
+        this.setState({
+            ...this.state,
+            currentVideo: {},
+        })
+    }
+
     render() {
         const {
             onShare,
             loginWithEmailAndPassword,
             getProjects,
             generateVideo,
-            onStepFinish,
+            setWalkaroundStep,
             getCurrentUser,
             hideLoading,
             showLoading,
             generateThumbnail,
             pickVideoFromLibrary,
+            setInspectionVideo,
         } = this
 
         __DEV__ && console.log('State', this.state)
@@ -278,12 +287,13 @@ export default class AppProvider extends Component {
                         loginWithEmailAndPassword,
                         getProjects,
                         generateVideo,
-                        onStepFinish,
+                        setWalkaroundStep,
                         getCurrentUser,
                         showLoading,
                         hideLoading,
                         generateThumbnail,
                         pickVideoFromLibrary,
+                        setInspectionVideo,
                     },
                 }}
             >

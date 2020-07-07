@@ -8,6 +8,7 @@ import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommun
 import Routes from '../constants/Routes'
 import Color from '../constants/Colors'
 import CameraButton from '../components/CameraButton'
+import { AppContext } from '../context/AppProvider'
 
 // Screens
 import Login from '../screens/Login'
@@ -15,7 +16,7 @@ import VideoList from '../screens/VideoList'
 import RecordWalkaround from '../screens/RecordWalkaround'
 import Playback from '../screens/Playback'
 import RecordVideo from '../screens/RecordVideo'
-import { AppContext } from '../context/AppProvider'
+import RecordInspection from '../screens/Inspection/RecordInspection'
 
 const BottomTab = createBottomTabNavigator()
 const HomeStack = createStackNavigator()
@@ -43,14 +44,14 @@ function inDevelopmentScreen({ route, navigation }) {
 }
 
 export function BottomTabNavigator({ navigation, route }) {
-    let tabName = Routes.WALKAROUND
+    let initialRoute = Routes.INSPECTION
     if (route.state) {
-        tabName = route.state.routeNames[route.state.index]
+        initialRoute = route.state.routeNames[route.state.index]
     }
 
     let routeName = ''
 
-    switch (tabName) {
+    switch (initialRoute) {
         case Routes.WALKAROUND:
             routeName = Routes.RECORD_WALKAROUND
             break
@@ -61,12 +62,12 @@ export function BottomTabNavigator({ navigation, route }) {
             routeName = Routes.RECORD_INSPECTION
             break
         default:
-            routeName = tabName
+            routeName = initialRoute
             break
     }
 
     navigation.setOptions({
-        headerTitle: `${tabName} Videos`,
+        headerTitle: `${initialRoute} Videos`,
         headerRight: ({ focused }) => (
             <CameraButton
                 style={{ marginRight: 15 }}
@@ -77,7 +78,7 @@ export function BottomTabNavigator({ navigation, route }) {
 
     return (
         <BottomTab.Navigator
-            initialRouteName={Routes.WALKAROUND}
+            initialRouteName={initialRoute}
             activeColor={Color.mainBlue}
             inactiveColor={Color.darkGray}
         >
@@ -168,7 +169,7 @@ export function HomeNavigation({ navigation }) {
             />
             <RecordingStack.Screen
                 name={Routes.RECORD_INSPECTION}
-                component={inDevelopmentScreen}
+                component={RecordInspection}
             />
 
             <RecordingStack.Screen

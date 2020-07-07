@@ -1,36 +1,34 @@
 import React from 'react'
 import { StyleSheet, ScrollView, Text } from 'react-native'
 
-import Color from '../constants/Colors'
-import BorderInput from '../components/BorderInput'
-import StepButton from '../components/StepButton'
-import Routes from '../constants/Routes'
-import { recordingDuration, steps } from '../constants/Settings'
-import { AppContext } from '../context/AppProvider'
-import VideoOptionsModal from '../components/VideoOptionsModal'
+import Color from '../../constants/Colors'
+import BorderInput from '../../components/BorderInput'
+import StepButton from '../../components/StepButton'
+import Routes from '../../constants/Routes'
+import { recordingDuration, steps } from '../../constants/Settings'
+import { AppContext } from '../../context/AppProvider'
+import VideoOptionsModal from '../../components/VideoOptionsModal'
 
-function RecordWalkaround({ navigation, route }) {
+function RecordInspection({ navigation, route }) {
     const {
-        data: { currentVideo },
+        data: { inspection },
         actions: {
             generateVideo,
             showLoading,
             hideLoading,
             pickVideoFromLibrary,
-            setWalkaroundStep,
+            setInspectionVideo,
         },
     } = React.useContext(AppContext)
 
     const [selectedStep, setSelectedStep] = React.useState(null)
     const [form, setForm] = React.useState({
-        vin: '',
         title: '',
-        details: '',
     })
 
     React.useEffect(() => {
         navigation.setOptions({
-            headerTitle: `Record ${route.name}`,
+            headerTitle: route.name,
             headerRight: null,
             headerTitleAlign: 'center',
         })
@@ -38,7 +36,12 @@ function RecordWalkaround({ navigation, route }) {
 
     const navigateToRecordingScreen = React.useMemo(
         () => () => {
-            navigation.navigate(Routes.CAMERA, JSON.stringify(selectedStep))
+            navigation.navigate(
+                Routes.CAMERA,
+                JSON.stringify({
+                    ...selectedStep,
+                }),
+            )
             setSelectedStep(null)
         },
         [selectedStep],
@@ -50,12 +53,12 @@ function RecordWalkaround({ navigation, route }) {
                 const video = await pickVideoFromLibrary(
                     selectedStep.duration * 1000,
                 )
-                const stepName = selectedStep.stepName
+
                 setSelectedStep(null)
 
                 if (video) {
                     showLoading()
-                    await setWalkaroundStep(stepName, video.uri)
+                    await setInspectionVideo(video.uri)
                 }
             } catch (error) {
                 setSelectedStep(null)
@@ -72,7 +75,7 @@ function RecordWalkaround({ navigation, route }) {
             setSelectedStep({
                 duration,
                 stepName,
-                actionType: 'setWalkaroundStep',
+                actionType: 'setInspectionVideo',
             })
         },
         [],
@@ -93,61 +96,18 @@ function RecordWalkaround({ navigation, route }) {
     return (
         <ScrollView style={styles.container}>
             <BorderInput
-                placeholder='Enter VIN #'
-                value={form.vin}
-                onChangeText={value => setForm({ ...form, vin: value })}
-            />
-            <BorderInput
-                placeholder='Enter Vehicle Title'
+                placeholder='Enter Video Title'
                 value={form.title}
                 onChangeText={value => setForm({ ...form, title: value })}
-            />
-            <BorderInput
-                placeholder='Enter Vehicle Details'
-                value={form.details}
-                onChangeText={value => setForm({ ...form, details: value })}
             />
             <Text style={styles.text}>
                 Select or Record Your Video Segments
             </Text>
             <StepButton
-                title={`Step 1: ${steps.walkaround.INTRO}`}
-                success={!!currentVideo[steps.walkaround.INTRO]}
+                title={`Select or Record Video`}
+                success={!!inspection.currentVideo}
                 onPress={() =>
-                    onStepPress(
-                        recordingDuration.walkaround.INTRO,
-                        steps.walkaround.INTRO,
-                    )
-                }
-            />
-            <StepButton
-                title={`Step 2: ${steps.walkaround.EXTERIOR}`}
-                success={!!currentVideo[steps.walkaround.EXTERIOR]}
-                onPress={() =>
-                    onStepPress(
-                        recordingDuration.walkaround.EXTERIOR,
-                        steps.walkaround.EXTERIOR,
-                    )
-                }
-            />
-            <StepButton
-                title={`Step 3: ${steps.walkaround.INTERIOR}`}
-                success={!!currentVideo[steps.walkaround.INTERIOR]}
-                onPress={() =>
-                    onStepPress(
-                        recordingDuration.walkaround.INTERIOR,
-                        steps.walkaround.INTERIOR,
-                    )
-                }
-            />
-            <StepButton
-                title={`Step 4: ${steps.walkaround.OUTRO}`}
-                success={!!currentVideo[steps.walkaround.OUTRO]}
-                onPress={() =>
-                    onStepPress(
-                        recordingDuration.walkaround.OUTRO,
-                        steps.walkaround.OUTRO,
-                    )
+                    onStepPress(recordingDuration.inspection, steps.inspection)
                 }
             />
             <StepButton
@@ -187,4 +147,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default RecordWalkaround
+export default RecordInspection

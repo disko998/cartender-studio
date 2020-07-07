@@ -32,7 +32,7 @@ export default CameraView = React.forwardRef(
                         <Countdown
                             running={isRecording}
                             until={duration}
-                            timeToShow={['S']}
+                            timeToShow={['M', 'S']}
                             digitStyle={styles.digitStyle}
                             digitTxtStyle={styles.digitTxtStyle}
                         />

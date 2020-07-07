@@ -11,10 +11,11 @@ import VideoPlayer from '../components/VideoPlayer'
 import { AppContext } from '../context/AppProvider'
 
 export default function RecordVideo({ route, navigation }) {
-    const { duration = 15, stepName = 'Video' } = JSON.parse(route.params)
-    const {
-        actions: { onStepFinish, hideLoading, showLoading },
-    } = useContext(AppContext)
+    const { duration = 15, stepName = 'Video', actionType } = JSON.parse(
+        route.params,
+    )
+    const { actions } = useContext(AppContext)
+
     const [video, setVideo] = useState(null)
     const [isRecording, setRecording] = useState(false)
     const [hasPermission, setHasPermission] = useState(false)
@@ -77,8 +78,11 @@ export default function RecordVideo({ route, navigation }) {
 
     const onConfirm = async () => {
         try {
-            showLoading()
-            await onStepFinish(stepName, video.uri)
+            actions.showLoading()
+
+            saveVideo = getActionType()
+            await saveVideo
+
             await ScreenOrientation.lockAsync(
                 ScreenOrientation.OrientationLock.PORTRAIT_UP,
             )
@@ -86,7 +90,18 @@ export default function RecordVideo({ route, navigation }) {
         } catch (error) {
             alert(error.message)
         } finally {
-            hideLoading()
+            actions.hideLoading()
+        }
+    }
+
+    const getActionType = () => {
+        switch (actionType) {
+            case 'setInspectionVideo':
+                return actions['setInspectionVideo'](video.uri)
+            case 'setWalkaroundStep':
+                return actions['setWalkaroundStep'](stepName, video.uri)
+            default:
+                return actions['setWalkaroundStep'](stepName, video.uri)
         }
     }
 
