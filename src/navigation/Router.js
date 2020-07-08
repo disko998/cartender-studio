@@ -9,7 +9,7 @@ import Routes from '../constants/Routes'
 import Color from '../constants/Colors'
 import CameraButton from '../components/CameraButton'
 import { AppContext } from '../context/AppProvider'
-import useProjectsData from '../hooks/useProjects'
+import useProjectsData from '../hooks/useProjectsData'
 
 // Screens
 import Login from '../screens/Login'
@@ -19,6 +19,8 @@ import Playback from '../screens/Playback'
 import RecordVideo from '../screens/RecordVideo'
 import RecordInspection from '../screens/Inspection/RecordInspection'
 import Inspection from '../screens/Inspection/Inspection'
+import RecordGreeting from '../screens/Greeting/RecordGreeting'
+import Greeting from '../screens/Greeting/Greeting'
 
 const BottomTab = createBottomTabNavigator()
 const HomeStack = createStackNavigator()
@@ -133,7 +135,7 @@ export function BottomTabNavigator({ navigation, route }) {
             />
             <BottomTab.Screen
                 name={Routes.GREETING}
-                component={inDevelopmentScreen}
+                component={Greeting}
                 options={{
                     title: Routes.GREETING,
                     tabBarIcon: ({ focused, color }) => (
@@ -178,7 +180,7 @@ export function HomeNavigation({ navigation }) {
 
             <RecordingStack.Screen
                 name={Routes.RECORD_GREETING}
-                component={inDevelopmentScreen}
+                component={RecordGreeting}
             />
             <HomeStack.Screen name={Routes.CAMERA} component={RecordVideo} />
             <HomeStack.Screen name={Routes.PLAYBACK} component={Playback} />

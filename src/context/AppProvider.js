@@ -36,6 +36,9 @@ export default class AppProvider extends Component {
         inspection: {
             currentVideo: null,
         },
+        greeting: {
+            currentVideo: null,
+        },
     }
 
     loginWithEmailAndPassword = async (email, password) => {
@@ -197,6 +200,21 @@ export default class AppProvider extends Component {
         })
     }
 
+    setGreetingVideo = async uri => {
+        const url = await this.saveFileToS3(uri, 'video/mp4')
+
+        __DEV__ && console.log('S3 url', url)
+
+        if (!url) {
+            throw new Error('Uploading to S3 failed')
+        }
+
+        this.setState({
+            ...this.state,
+            greeting: { ...this.state.greeting, currentVideo: url },
+        })
+    }
+
     setWalkaroundStep = async (stepName, uri) => {
         const url = await this.saveFileToS3(uri, 'video/mp4')
 
@@ -250,7 +268,54 @@ export default class AppProvider extends Component {
 
         this.setState({
             ...this.state,
-            currentVideo: {},
+            inspection: { ...inspection, currentVideo: null },
+        })
+    }
+
+    generateGreetingVideo = async ({ name, job, phone, customer }) => {
+        const video = this.state.greeting.currentVideo
+
+        if (!(name && job && phone && customer)) {
+            throw new Error('Please fill out the form')
+        }
+
+        if (!video) {
+            throw new Error('You must record a clip before generating a video')
+        }
+
+        const imagePath = await this.generateThumbnail(video, 500)
+        const thumbnail = await this.saveFileToS3(imagePath, 'image/jpg')
+
+        const postData = {
+            'request-type': 'new',
+            'data-source': 'mobile-app',
+            'staff-name': name,
+            'staff-job-title': job,
+            'staff-phone': phone,
+            'video-image': thumbnail,
+            'video-clip1': video,
+            'customer-name': customer,
+            template: templates.greeting,
+            output: `${name} - ${job}`,
+        }
+
+        __DEV__ && console.log('POST request', postData)
+
+        const res = await post(api.projects, postData, {
+            Authorization: `Bearer ${this.state.user.token}`,
+        })
+
+        __DEV__ && console.log('POST response', res)
+
+        if (res.message) {
+            throw new Error(res.message)
+        }
+
+        this.getProjects()
+
+        this.setState({
+            ...this.state,
+            greeting: { ...this.state.greeting, currentVideo: null },
         })
     }
 
@@ -320,6 +385,8 @@ export default class AppProvider extends Component {
             pickVideoFromLibrary,
             setInspectionVideo,
             generateInspectionVideo,
+            setGreetingVideo,
+            generateGreetingVideo,
         } = this
 
         __DEV__ && console.log('State', this.state)
@@ -341,6 +408,8 @@ export default class AppProvider extends Component {
                         pickVideoFromLibrary,
                         setInspectionVideo,
                         generateInspectionVideo,
+                        setGreetingVideo,
+                        generateGreetingVideo,
                     },
                 }}
             >

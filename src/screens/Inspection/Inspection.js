@@ -13,10 +13,12 @@ import Color from '../../constants/Colors'
 import Routes from '../../constants/Routes'
 import { AppContext } from '../../context/AppProvider'
 import { templates } from '../../constants/Settings'
+import useProjects from '../../hooks/useProjects'
 
 export default function Inspection({ navigation }) {
+    const projects = useProjects(templates.inspection.template)
+
     const {
-        data: { projects },
         actions: { onShare },
     } = React.useContext(AppContext)
 
@@ -37,7 +39,7 @@ export default function Inspection({ navigation }) {
         )
     }
 
-    if (!projects.projects.length) {
+    if (projects.projects) {
         return (
             <View style={styles.center}>
                 <Text style={styles.empty}>You don't have any videos</Text>
@@ -48,11 +50,7 @@ export default function Inspection({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <FlatList
-                data={projects.projects.filter(
-                    i =>
-                        i['render-status'] !== 'canceled' &&
-                        i.template.template === templates.inspection.template,
-                )}
+                data={projects}
                 renderItem={({ item }) => (
                     <VideoCard
                         status={item['render-status']}

@@ -100,6 +100,8 @@ export default function RecordVideo({ route, navigation }) {
                 return actions['setInspectionVideo'](video.uri)
             case 'setWalkaroundStep':
                 return actions['setWalkaroundStep'](stepName, video.uri)
+            case 'setGreetingVideo':
+                return actions['setGreetingVideo'](video.uri)
             default:
                 return actions['setWalkaroundStep'](stepName, video.uri)
         }

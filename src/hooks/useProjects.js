@@ -1,24 +1,19 @@
-import { Ionicons } from '@expo/vector-icons'
-
 import * as React from 'react'
 
 import { AppContext } from '../context/AppProvider'
-import { pullingInterval } from '../constants/Settings'
 
-export default function useProjectsData() {
+export default function useProjects(template) {
     const {
-        actions: { getProjects },
+        data: { projects },
     } = React.useContext(AppContext)
 
-    React.useEffect(() => {
-        let interval
-        ;(async () => {
-            try {
-                await getProjects()
-                interval = setInterval(getProjects, pullingInterval)
-            } catch (error) {
-                __DEV__ && console.log(error.message)
-            }
-        })()
-    }, [])
+    if (!projects) {
+        return null
+    } else {
+        return projects.projects.filter(
+            i =>
+                i['render-status'] !== 'canceled' &&
+                i.template.template === template,
+        )
+    }
 }

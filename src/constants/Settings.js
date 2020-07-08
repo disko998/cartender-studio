@@ -8,6 +8,7 @@ export const recordingDuration = {
         OUTRO: 15,
     },
     inspection: 120,
+    greeting: 60,
 }
 
 export const steps = {

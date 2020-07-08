@@ -8,26 +8,25 @@ import {
     Text,
 } from 'react-native'
 
-import VideoCard from '../components/VideoCard'
-import Color from '../constants/Colors'
-import Routes from '../constants/Routes'
-import { AppContext } from '../context/AppProvider'
-import { templates } from '../constants/Settings'
-import useProjects from '../hooks/useProjects'
+import VideoCard from '../../components/VideoCard'
+import Color from '../../constants/Colors'
+import Routes from '../../constants/Routes'
+import { AppContext } from '../../context/AppProvider'
+import { templates } from '../../constants/Settings'
+import useProjects from '../../hooks/useProjects'
 
-export default function VideoList({ navigation }) {
-    const projects = useProjects(templates.walkaround.template)
-
+export default function Greeting({ navigation }) {
+    const projects = useProjects(templates.greeting.template)
     const {
         actions: { onShare },
     } = React.useContext(AppContext)
 
     const navigateToPlayback = item => {
         navigation.navigate(Routes.PLAYBACK, {
-            title: item['vehicle-title'],
-            details: item['vehicle-details'],
+            title: item['staff-job-title'],
+            details: `Staff-name: ${item['staff-name']} - Customer-name: ${item['customer-name']}`,
             video: item['s3_url'],
-            poster: { uri: item['vehicle-image'] },
+            poster: { uri: item['video-image'] },
         })
     }
 
@@ -54,15 +53,15 @@ export default function VideoList({ navigation }) {
                 renderItem={({ item }) => (
                     <VideoCard
                         status={item['render-status']}
-                        title={item['vehicle-title']}
-                        details={item['vehicle-details']}
-                        thumbnail={item['vehicle-image']}
+                        title={item['staff-job-title']}
+                        details={`Staff-name: ${item['staff-name']} - Customer-name: ${item['customer-name']}`}
+                        thumbnail={item['video-image']}
                         onPlay={() => navigateToPlayback(item)}
                         onShare={() =>
                             onShare({
                                 message: item['s3_url'],
-                                title: item['vehicle-title'],
-                                subject: item['vehicle-details'],
+                                title: item['staff-job-title'],
+                                subject: `Staff-name: ${item['staff-name']} - Customer-name: ${item['customer-name']}`,
                             })
                         }
                     />
