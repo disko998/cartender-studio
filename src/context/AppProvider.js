@@ -156,12 +156,16 @@ export default class AppProvider extends Component {
             }
         }
 
+        this.showLoading()
+
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Videos,
             quality: 0.5,
             videoExportPreset: ImagePicker.VideoExportPreset.MediumQuality,
             allowsEditing: true,
         })
+
+        this.hideLoading()
 
         __DEV__ && console.log('Video chosen', result)
 
@@ -223,10 +227,10 @@ export default class AppProvider extends Component {
         const postData = {
             'request-type': 'new',
             'data-source': 'mobile-app',
-            template: templates.inspection,
-            'vehicle-title': title,
-            'vehicle-image': thumbnail,
+            'video-title': title,
+            'video-image': thumbnail,
             'video-clip1': video,
+            template: templates.inspection,
             output: title,
         }
 
@@ -250,8 +254,7 @@ export default class AppProvider extends Component {
         })
     }
 
-    // generate Walkaround Video
-    generateVideo = async ({ vin, title, details }) => {
+    generateWalkaroundVideo = async ({ vin, title, details }) => {
         const { Intro, Interior, Exterior, Outro } = this.state.currentVideo
 
         if (!(vin && title && details)) {
@@ -308,7 +311,7 @@ export default class AppProvider extends Component {
             onShare,
             loginWithEmailAndPassword,
             getProjects,
-            generateVideo,
+            generateWalkaroundVideo,
             setWalkaroundStep,
             getCurrentUser,
             hideLoading,
@@ -329,7 +332,7 @@ export default class AppProvider extends Component {
                         onShare,
                         loginWithEmailAndPassword,
                         getProjects,
-                        generateVideo,
+                        generateWalkaroundVideo,
                         setWalkaroundStep,
                         getCurrentUser,
                         showLoading,

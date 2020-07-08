@@ -17,22 +17,8 @@ import { pullingInterval } from '../constants/Settings'
 export default function VideoList({ navigation }) {
     const {
         data: { projects },
-        actions: { onShare, getProjects },
+        actions: { onShare },
     } = React.useContext(AppContext)
-
-    React.useEffect(() => {
-        let interval
-        ;(async () => {
-            try {
-                await getProjects()
-                interval = setInterval(getProjects, pullingInterval)
-            } catch (error) {
-                alert(error.message)
-                clearInterval(interval)
-            }
-        })()
-        return () => clearInterval(interval)
-    }, [])
 
     const navigateToPlayback = item => {
         navigation.navigate(Routes.PLAYBACK, {

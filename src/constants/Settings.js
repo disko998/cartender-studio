@@ -18,6 +18,7 @@ export const steps = {
         OUTRO: 'Outro',
     },
     inspection: 'Inspection',
+    greeting: 'Greeting',
 }
 
 export const templates = {

@@ -13,7 +13,7 @@ function RecordWalkaround({ navigation, route }) {
     const {
         data: { currentVideo },
         actions: {
-            generateVideo,
+            generateWalkaroundVideo,
             showLoading,
             hideLoading,
             pickVideoFromLibrary,
@@ -58,8 +58,8 @@ function RecordWalkaround({ navigation, route }) {
                     await setWalkaroundStep(stepName, video.uri)
                 }
             } catch (error) {
-                setSelectedStep(null)
                 alert(error.message)
+                setSelectedStep(null)
             } finally {
                 hideLoading()
             }
@@ -81,7 +81,7 @@ function RecordWalkaround({ navigation, route }) {
     const onGenerateVideo = async () => {
         try {
             showLoading()
-            await generateVideo(form)
+            await generateWalkaroundVideo(form)
             navigation.goBack()
         } catch (error) {
             alert(error.message)

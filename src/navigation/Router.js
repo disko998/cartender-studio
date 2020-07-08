@@ -9,6 +9,7 @@ import Routes from '../constants/Routes'
 import Color from '../constants/Colors'
 import CameraButton from '../components/CameraButton'
 import { AppContext } from '../context/AppProvider'
+import useProjectsData from '../hooks/useProjects'
 
 // Screens
 import Login from '../screens/Login'
@@ -17,6 +18,7 @@ import RecordWalkaround from '../screens/RecordWalkaround'
 import Playback from '../screens/Playback'
 import RecordVideo from '../screens/RecordVideo'
 import RecordInspection from '../screens/Inspection/RecordInspection'
+import Inspection from '../screens/Inspection/Inspection'
 
 const BottomTab = createBottomTabNavigator()
 const HomeStack = createStackNavigator()
@@ -40,6 +42,25 @@ function inDevelopmentScreen({ route, navigation }) {
             </Text>
             <Button onPress={() => navigation.goBack()} title='Go back' />
         </View>
+    )
+}
+
+export function RecodingStack({ navigation }) {
+    navigation.setOptions({
+        headerTitle: 'Record Walkaround',
+        headerRight: null,
+        headerTitleAlign: 'center',
+        headerShown: false,
+    })
+
+    return (
+        <RecordingStack.Navigator initialRouteName={Routes.RECORD_WALKAROUND}>
+            <RecordingStack.Screen
+                name={Routes.RECORD_WALKAROUND}
+                component={RecordWalkaround}
+            />
+            <HomeStack.Screen name={Routes.CAMERA} component={RecordVideo} />
+        </RecordingStack.Navigator>
     )
 }
 
@@ -98,7 +119,7 @@ export function BottomTabNavigator({ navigation, route }) {
             />
             <BottomTab.Screen
                 name={Routes.INSPECTION}
-                component={inDevelopmentScreen}
+                component={Inspection}
                 options={{
                     title: Routes.INSPECTION,
                     tabBarIcon: ({ focused, color }) => (
@@ -128,26 +149,9 @@ export function BottomTabNavigator({ navigation, route }) {
     )
 }
 
-export function RecodingStack({ navigation }) {
-    navigation.setOptions({
-        headerTitle: 'Record Walkaround',
-        headerRight: null,
-        headerTitleAlign: 'center',
-        headerShown: false,
-    })
-
-    return (
-        <RecordingStack.Navigator initialRouteName={Routes.RECORD_WALKAROUND}>
-            <RecordingStack.Screen
-                name={Routes.RECORD_WALKAROUND}
-                component={RecordWalkaround}
-            />
-            <HomeStack.Screen name={Routes.CAMERA} component={RecordVideo} />
-        </RecordingStack.Navigator>
-    )
-}
-
 export function HomeNavigation({ navigation }) {
+    useProjectsData()
+
     return (
         <HomeStack.Navigator
             initialRouteName={Routes.VIDEO_LIST}
