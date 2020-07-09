@@ -46,10 +46,15 @@ export default class AppProvider extends Component {
             throw new Error('Please enter correct email and password')
         }
 
-        let user = await post(api.auth, {
-            email,
-            password,
-        })
+        let user = await post(
+            api.auth,
+            __DEV__
+                ? devCredentials
+                : {
+                      email,
+                      password,
+                  },
+        )
 
         if (!user.token) {
             throw new Error(user.message)
@@ -58,6 +63,12 @@ export default class AppProvider extends Component {
         await AsyncStorage.setItem('token', user.token)
 
         this.getCurrentUser()
+    }
+
+    logoutUser = async () => {
+        await AsyncStorage.removeItem('token')
+
+        this.setState({ ...this.state, user: null })
     }
 
     getCurrentUser = async () => {
@@ -387,6 +398,7 @@ export default class AppProvider extends Component {
             generateInspectionVideo,
             setGreetingVideo,
             generateGreetingVideo,
+            logoutUser,
         } = this
 
         __DEV__ && console.log('State', this.state)
@@ -410,6 +422,7 @@ export default class AppProvider extends Component {
                         generateInspectionVideo,
                         setGreetingVideo,
                         generateGreetingVideo,
+                        logoutUser,
                     },
                 }}
             >

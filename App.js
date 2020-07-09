@@ -4,7 +4,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 
 import useCachedResources from './src/hooks/useCachedResources'
 import Color from './src/constants/Colors'
-import Router from './src/navigation/Router'
+import Navigation from './src/navigation/Navigation'
 import AppProvider, { AppContext } from './src/context/AppProvider'
 
 export default function App() {
@@ -32,7 +32,7 @@ export default function App() {
                             />
                         )}
                     </AppContext.Consumer>
-                    <Router />
+                    <Navigation />
                 </AppProvider>
             </SafeAreaView>
         )

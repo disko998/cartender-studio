@@ -17,6 +17,7 @@ import useProjects from '../../hooks/useProjects'
 
 export default function Greeting({ navigation }) {
     const projects = useProjects(templates.greeting.template)
+
     const {
         actions: { onShare },
     } = React.useContext(AppContext)

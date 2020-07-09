@@ -10,4 +10,5 @@ export default {
     RECORD_WALKAROUND: 'Record Walkaround',
     RECORD_INSPECTION: 'Record Inspection',
     RECORD_GREETING: 'Record Greeting',
+    SETTINGS: 'Settings',
 }

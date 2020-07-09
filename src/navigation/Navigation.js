@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import Routes from '../constants/Routes'
 import Color from '../constants/Colors'
@@ -21,6 +22,7 @@ import RecordInspection from '../screens/Inspection/RecordInspection'
 import Inspection from '../screens/Inspection/Inspection'
 import RecordGreeting from '../screens/Greeting/RecordGreeting'
 import Greeting from '../screens/Greeting/Greeting'
+import Settings from '../screens/Settings'
 
 const BottomTab = createBottomTabNavigator()
 const HomeStack = createStackNavigator()
@@ -90,13 +92,14 @@ export function BottomTabNavigator({ navigation, route }) {
     }
 
     navigation.setOptions({
-        headerTitle: `${initialRoute} Videos`,
-        headerRight: ({ focused }) => (
-            <CameraButton
-                style={{ marginRight: 15 }}
-                onPress={() => navigation.navigate(routeName)}
-            />
-        ),
+        headerTitle: `${initialRoute}`,
+        headerRight: ({ focused }) =>
+            initialRoute === Routes.SETTINGS ? null : (
+                <CameraButton
+                    style={{ marginRight: 15 }}
+                    onPress={() => navigation.navigate(routeName)}
+                />
+            ),
     })
 
     return (
@@ -147,6 +150,16 @@ export function BottomTabNavigator({ navigation, route }) {
                     ),
                 }}
             />
+            <BottomTab.Screen
+                name={Routes.SETTINGS}
+                component={Settings}
+                options={{
+                    title: Routes.SETTINGS,
+                    tabBarIcon: ({ focused, color }) => (
+                        <FontAwesome name='gear' size={22} color={color} />
+                    ),
+                }}
+            />
         </BottomTab.Navigator>
     )
 }
@@ -188,7 +201,7 @@ export function HomeNavigation({ navigation }) {
     )
 }
 
-export default function Router() {
+export default function Navigation() {
     const {
         data: { user },
         actions: { getCurrentUser },
