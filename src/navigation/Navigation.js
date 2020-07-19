@@ -10,7 +10,7 @@ import Routes from '../constants/Routes'
 import Color from '../constants/Colors'
 import CameraButton from '../components/CameraButton'
 import { AppContext } from '../context/AppProvider'
-import useProjectsData from '../hooks/useProjectsData'
+import useFetchProjects from '../hooks/useFetchProjects'
 
 // Screens
 import Login from '../screens/Login'
@@ -22,6 +22,8 @@ import RecordInspection from '../screens/Inspection/RecordInspection'
 import Inspection from '../screens/Inspection/Inspection'
 import RecordGreeting from '../screens/Greeting/RecordGreeting'
 import Greeting from '../screens/Greeting/Greeting'
+import Dealership from '../screens/dealership/Dealership'
+import RecordDealership from '../screens/dealership/RecordDealership'
 import Settings from '../screens/Settings'
 
 const BottomTab = createBottomTabNavigator()
@@ -74,30 +76,36 @@ export function BottomTabNavigator({ navigation, route }) {
         initialRoute = route.state.routeNames[route.state.index]
     }
 
-    let routeName = ''
+    /* 
+        Navigate to recording screen base on tab.
+    */
+    let recordingRouteName = ''
 
     switch (initialRoute) {
         case Routes.WALKAROUND:
-            routeName = Routes.RECORD_WALKAROUND
+            recordingRouteName = Routes.RECORD_WALKAROUND
             break
         case Routes.GREETING:
-            routeName = Routes.RECORD_GREETING
+            recordingRouteName = Routes.RECORD_GREETING
             break
         case Routes.INSPECTION:
-            routeName = Routes.RECORD_INSPECTION
+            recordingRouteName = Routes.RECORD_INSPECTION
+            break
+        case Routes.DEALERSHIP:
+            recordingRouteName = Routes.RECORD_DEALERSHIP
             break
         default:
-            routeName = initialRoute
+            recordingRouteName = initialRoute
             break
     }
 
     navigation.setOptions({
-        headerTitle: `${initialRoute}`,
+        headerTitle: initialRoute,
         headerRight: ({ focused }) =>
             initialRoute === Routes.SETTINGS ? null : (
                 <CameraButton
                     style={{ marginRight: 15 }}
-                    onPress={() => navigation.navigate(routeName)}
+                    onPress={() => navigation.navigate(recordingRouteName)}
                 />
             ),
     })
@@ -151,6 +159,20 @@ export function BottomTabNavigator({ navigation, route }) {
                 }}
             />
             <BottomTab.Screen
+                name={Routes.DEALERSHIP}
+                component={Dealership}
+                options={{
+                    title: Routes.DEALERSHIP,
+                    tabBarIcon: ({ focused, color }) => (
+                        <MaterialCommunityIconsIcon
+                            name='office-building'
+                            size={22}
+                            color={color}
+                        />
+                    ),
+                }}
+            />
+            <BottomTab.Screen
                 name={Routes.SETTINGS}
                 component={Settings}
                 options={{
@@ -165,7 +187,7 @@ export function BottomTabNavigator({ navigation, route }) {
 }
 
 export function HomeNavigation({ navigation }) {
-    useProjectsData()
+    useFetchProjects()
 
     return (
         <HomeStack.Navigator
@@ -182,6 +204,7 @@ export function HomeNavigation({ navigation }) {
                 name={Routes.VIDEO_LIST}
                 component={BottomTabNavigator}
             />
+
             <RecordingStack.Screen
                 name={Routes.RECORD_WALKAROUND}
                 component={RecordWalkaround}
@@ -190,18 +213,22 @@ export function HomeNavigation({ navigation }) {
                 name={Routes.RECORD_INSPECTION}
                 component={RecordInspection}
             />
-
             <RecordingStack.Screen
                 name={Routes.RECORD_GREETING}
                 component={RecordGreeting}
             />
+            <RecordingStack.Screen
+                name={Routes.RECORD_DEALERSHIP}
+                component={RecordDealership}
+            />
+
             <HomeStack.Screen name={Routes.CAMERA} component={RecordVideo} />
             <HomeStack.Screen name={Routes.PLAYBACK} component={Playback} />
         </HomeStack.Navigator>
     )
 }
 
-export default function Navigation() {
+export default function RootNavigation() {
     const {
         data: { user },
         actions: { getCurrentUser },
@@ -219,10 +246,7 @@ export default function Navigation() {
 
     return (
         <NavigationContainer>
-            <RooStack.Navigator
-                headerMode='none'
-                initialRouteName={Routes.LOGIN}
-            >
+            <RooStack.Navigator headerMode='none'>
                 {!user ? (
                     <RooStack.Screen name={Routes.LOGIN} component={Login} />
                 ) : (

@@ -9,6 +9,7 @@ export const recordingDuration = {
     },
     inspection: 120,
     greeting: 60,
+    dealership: 15,
 }
 
 export const steps = {
@@ -20,6 +21,12 @@ export const steps = {
     },
     inspection: 'Inspection',
     greeting: 'Greeting',
+    dealership: {
+        BUILDING: 'Building',
+        CAR_LOT: 'Car Lot',
+        SHOWROOM: 'Showroom',
+        SERVICE_BAYS: 'Service Bays',
+    },
 }
 
 export const templates = {

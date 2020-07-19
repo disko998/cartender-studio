@@ -8,7 +8,7 @@ import * as Permissions from 'expo-permissions'
 
 import { _DATA } from './_DATA'
 import { post, api, get } from '../api'
-import { s3Options, templates } from '../constants/Settings'
+import { s3Options, templates, steps } from '../constants/Settings'
 
 export const AppContext = React.createContext()
 export const Provider = AppContext.Provider
@@ -33,6 +33,9 @@ export default class AppProvider extends Component {
             // Outro:
             //     'https://ct-sales-studio.s3.amazonaws.com/b3890fe1-37e8-4788-ae14-1d63f68aa764.mp4',
         },
+        dealership: {
+            currentVideo: {},
+        },
         inspection: {
             currentVideo: null,
         },
@@ -41,6 +44,7 @@ export default class AppProvider extends Component {
         },
     }
 
+    /* User actions */
     loginWithEmailAndPassword = async (email, password) => {
         if (!email.length || !password.length) {
             throw new Error('Please enter correct email and password')
@@ -88,6 +92,7 @@ export default class AppProvider extends Component {
         })
     }
 
+    /* Video actions */
     getProjects = async () => {
         const projects = await get(`${api.projects}?sort=-createDate`, {
             Authorization: `Bearer ${this.state.user.token}`,
@@ -150,14 +155,6 @@ export default class AppProvider extends Component {
         return res.body.postResponse.location
     }
 
-    showLoading = () => {
-        this.setState({ ...this.state, loading: true })
-    }
-
-    hideLoading = () => {
-        this.setState({ ...this.state, loading: false })
-    }
-
     pickVideoFromLibrary = async (duration = 15000) => {
         if (Constants.platform.ios) {
             const { status } = await Permissions.askAsync(
@@ -196,6 +193,7 @@ export default class AppProvider extends Component {
         return result
     }
 
+    /* Save recorded video */
     setInspectionVideo = async uri => {
         const url = await this.saveFileToS3(uri, 'video/mp4')
 
@@ -226,8 +224,31 @@ export default class AppProvider extends Component {
         })
     }
 
+    setDealershipVideo = async (stepName, uri) => {
+        const url = await this.saveFileToS3(uri, 'video/mp4')
+
+        __DEV__ && console.log('S3 url', url)
+
+        if (!url) {
+            throw new Error('Uploading to S3 failed')
+        }
+
+        this.setState({
+            ...this.state,
+            dealership: {
+                ...this.state.dealership,
+                currentVideo: {
+                    ...this.state.dealership.currentVideo,
+                    [stepName]: url,
+                },
+            },
+        })
+    }
+
     setWalkaroundStep = async (stepName, uri) => {
         const url = await this.saveFileToS3(uri, 'video/mp4')
+
+        __DEV__ && console.log('S3 url', url)
 
         if (!url) {
             throw new Error('Uploading to S3 failed')
@@ -239,6 +260,7 @@ export default class AppProvider extends Component {
         })
     }
 
+    /* Process clips after recording */
     generateInspectionVideo = async ({ title }) => {
         const video = this.state.inspection.currentVideo
 
@@ -382,6 +404,39 @@ export default class AppProvider extends Component {
         })
     }
 
+    saveDealershipVideo = async ({ dealership }) => {
+        const videos = this.state.dealership.currentVideo
+
+        if (!dealership) {
+            throw new Error('Please choose a dealership profile')
+        }
+
+        if (
+            !(videos[steps.dealership.BUILDING],
+            videos[steps.dealership.CAR_LOT],
+            videos[steps.dealership.SERVICE_BAYS],
+            videos[steps.dealership.SHOWROOM])
+        ) {
+            throw new Error(
+                'You must record a clip for each segment before saving a video',
+            )
+        }
+
+        this.setState({
+            ...this.state,
+            dealership: { ...this.state.dealership, currentVideo: {} },
+        })
+    }
+
+    /* Utils */
+    showLoading = () => {
+        this.setState({ ...this.state, loading: true })
+    }
+
+    hideLoading = () => {
+        this.setState({ ...this.state, loading: false })
+    }
+
     render() {
         const {
             onShare,
@@ -399,6 +454,8 @@ export default class AppProvider extends Component {
             setGreetingVideo,
             generateGreetingVideo,
             logoutUser,
+            setDealershipVideo,
+            saveDealershipVideo,
         } = this
 
         __DEV__ && console.log('State', this.state)
@@ -423,6 +480,8 @@ export default class AppProvider extends Component {
                         setGreetingVideo,
                         generateGreetingVideo,
                         logoutUser,
+                        setDealershipVideo,
+                        saveDealershipVideo,
                     },
                 }}
             >

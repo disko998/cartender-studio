@@ -5,7 +5,7 @@ import * as React from 'react'
 import { AppContext } from '../context/AppProvider'
 import { pullingInterval } from '../constants/Settings'
 
-export default function useProjectsData() {
+export default function useFetchProjects() {
     const {
         actions: { getProjects },
     } = React.useContext(AppContext)

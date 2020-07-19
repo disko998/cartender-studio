@@ -95,6 +95,7 @@ export default function RecordVideo({ route, navigation }) {
     }
 
     const getActionType = () => {
+        console.log('ACTION', actionType)
         switch (actionType) {
             case 'setInspectionVideo':
                 return actions['setInspectionVideo'](video.uri)
@@ -102,8 +103,13 @@ export default function RecordVideo({ route, navigation }) {
                 return actions['setWalkaroundStep'](stepName, video.uri)
             case 'setGreetingVideo':
                 return actions['setGreetingVideo'](video.uri)
+            case 'setDealershipVideo':
+                return actions['setDealershipVideo'](stepName, video.uri)
             default:
-                return actions['setWalkaroundStep'](stepName, video.uri)
+                return actions['setWalkaroundStep'](
+                    'ACTION NOT FOUND',
+                    video.uri,
+                )
         }
     }
 
