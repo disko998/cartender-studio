@@ -112,6 +112,7 @@ export default function RecordGreeting({ navigation, route }) {
                 placeholder='Enter Phone Number'
                 value={form.phone}
                 onChangeText={value => setForm({ ...form, phone: value })}
+                keyboardType='phone-pad'
             />
             <Text style={styles.text}>
                 Select or Record Your Video Segments
