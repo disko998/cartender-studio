@@ -8,14 +8,14 @@ import {
     Text,
 } from 'react-native'
 
-import VideoCard from '../components/VideoCard'
-import Color from '../constants/Colors'
-import Routes from '../constants/Routes'
-import { AppContext } from '../context/AppProvider'
-import { templates } from '../constants/Settings'
-import useProjects from '../hooks/useProjects'
+import VideoCard from '../../components/VideoCard'
+import Color from '../../constants/Colors'
+import Routes from '../../constants/Routes'
+import { AppContext } from '../../context/AppProvider'
+import { templates } from '../../constants/Settings'
+import useProjects from '../../hooks/useProjects'
 
-export default function VideoList({ navigation }) {
+export default function Walkaround({ navigation }) {
     const projects = useProjects(templates.walkaround.template)
 
     const {

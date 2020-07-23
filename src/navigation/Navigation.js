@@ -14,14 +14,14 @@ import useFetchProjects from '../hooks/useFetchProjects'
 
 // Screens
 import Login from '../screens/Login'
-import VideoList from '../screens/VideoList'
-import RecordWalkaround from '../screens/RecordWalkaround'
+import Walkaround from '../screens/walkaround/Walkaround'
+import RecordWalkaround from '../screens/walkaround/RecordWalkaround'
 import Playback from '../screens/Playback'
 import RecordVideo from '../screens/RecordVideo'
-import RecordInspection from '../screens/Inspection/RecordInspection'
-import Inspection from '../screens/Inspection/Inspection'
-import RecordGreeting from '../screens/Greeting/RecordGreeting'
-import Greeting from '../screens/Greeting/Greeting'
+import RecordInspection from '../screens/inspection/RecordInspection'
+import Inspection from '../screens/inspection/Inspection'
+import RecordGreeting from '../screens/greeting/RecordGreeting'
+import Greeting from '../screens/greeting/Greeting'
 import Dealership from '../screens/dealership/Dealership'
 import RecordDealership from '../screens/dealership/RecordDealership'
 import Settings from '../screens/Settings'
@@ -33,9 +33,7 @@ const RooStack = createStackNavigator()
 
 function inDevelopmentScreen({ route, navigation }) {
     return (
-        <View
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-        >
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text
                 style={{
                     marginBottom: 15,
@@ -118,15 +116,11 @@ export function BottomTabNavigator({ navigation, route }) {
         >
             <BottomTab.Screen
                 name={Routes.WALKAROUND}
-                component={VideoList}
+                component={Walkaround}
                 options={{
                     title: Routes.WALKAROUND,
                     tabBarIcon: ({ focused, color }) => (
-                        <MaterialCommunityIconsIcon
-                            name='car'
-                            size={22}
-                            color={color}
-                        />
+                        <MaterialCommunityIconsIcon name='car' size={22} color={color} />
                     ),
                 }}
             />
@@ -200,10 +194,7 @@ export function HomeNavigation({ navigation }) {
                 },
             }}
         >
-            <HomeStack.Screen
-                name={Routes.VIDEO_LIST}
-                component={BottomTabNavigator}
-            />
+            <HomeStack.Screen name={Routes.VIDEO_LIST} component={BottomTabNavigator} />
 
             <RecordingStack.Screen
                 name={Routes.RECORD_WALKAROUND}
@@ -250,10 +241,7 @@ export default function RootNavigation() {
                 {!user ? (
                     <RooStack.Screen name={Routes.LOGIN} component={Login} />
                 ) : (
-                    <RooStack.Screen
-                        name={Routes.HOME}
-                        component={HomeNavigation}
-                    />
+                    <RooStack.Screen name={Routes.HOME} component={HomeNavigation} />
                 )}
             </RooStack.Navigator>
         </NavigationContainer>

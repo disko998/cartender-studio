@@ -1,17 +1,17 @@
 import React from 'react'
 import { StyleSheet, ScrollView, Text } from 'react-native'
 
-import Color from '../constants/Colors'
-import BorderInput from '../components/BorderInput'
-import StepButton from '../components/StepButton'
-import Routes from '../constants/Routes'
-import { recordingDuration, steps } from '../constants/Settings'
-import { AppContext } from '../context/AppProvider'
-import VideoOptionsModal from '../components/VideoOptionsModal'
+import Color from '../../constants/Colors'
+import BorderInput from '../../components/BorderInput'
+import StepButton from '../../components/StepButton'
+import Routes from '../../constants/Routes'
+import { recordingDuration, steps } from '../../constants/Settings'
+import { AppContext } from '../../context/AppProvider'
+import VideoOptionsModal from '../../components/VideoOptionsModal'
 
 function RecordWalkaround({ navigation, route }) {
     const {
-        data: { currentVideo },
+        data: { walkaround },
         actions: {
             generateWalkaroundVideo,
             showLoading,
@@ -20,6 +20,7 @@ function RecordWalkaround({ navigation, route }) {
             setWalkaroundStep,
         },
     } = React.useContext(AppContext)
+    const { currentVideo } = walkaround
 
     const [selectedStep, setSelectedStep] = React.useState(null)
     const [form, setForm] = React.useState({
@@ -47,9 +48,7 @@ function RecordWalkaround({ navigation, route }) {
     const chooseVideo = React.useMemo(
         () => async () => {
             try {
-                const video = await pickVideoFromLibrary(
-                    selectedStep.duration * 1000,
-                )
+                const video = await pickVideoFromLibrary(selectedStep.duration * 1000)
                 const stepName = selectedStep.stepName
                 setSelectedStep(null)
 
@@ -107,9 +106,7 @@ function RecordWalkaround({ navigation, route }) {
                 value={form.details}
                 onChangeText={value => setForm({ ...form, details: value })}
             />
-            <Text style={styles.text}>
-                Select or Record Your Video Segments
-            </Text>
+            <Text style={styles.text}>Select or Record Your Video Segments</Text>
             <StepButton
                 title={`Step 1: ${steps.walkaround.INTRO}`}
                 success={!!currentVideo[steps.walkaround.INTRO]}
