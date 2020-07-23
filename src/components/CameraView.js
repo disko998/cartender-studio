@@ -15,9 +15,7 @@ export default CameraView = React.forwardRef(
                 ratio='16:9'
                 autoFocus={Camera.Constants.AutoFocus.on}
                 whiteBalance={Camera.Constants.WhiteBalance.auto}
-                videoStabilizationMode={
-                    Camera.Constants.VideoStabilization.auto
-                }
+                videoStabilizationMode={Camera.Constants.VideoStabilization.auto}
                 onMountError={err => {
                     alert(err.message)
                 }}
@@ -26,9 +24,7 @@ export default CameraView = React.forwardRef(
                 <View style={styles.overlay}>
                     <View style={styles.frame} />
                     <View style={styles.counter}>
-                        <Text style={styles.digitTxtStyle}>
-                            Time Remaining:
-                        </Text>
+                        <Text style={styles.digitTxtStyle}>Time Remaining:</Text>
                         <Countdown
                             running={isRecording}
                             until={duration}

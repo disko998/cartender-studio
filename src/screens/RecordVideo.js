@@ -11,9 +11,7 @@ import VideoPlayer from '../components/VideoPlayer'
 import { AppContext } from '../context/AppProvider'
 
 export default function RecordVideo({ route, navigation }) {
-    const { duration = 15, stepName = 'Video', actionType } = JSON.parse(
-        route.params,
-    )
+    const { duration = 15, stepName = 'Video', actionType } = JSON.parse(route.params)
     const { actions } = useContext(AppContext)
 
     const [video, setVideo] = useState(null)
@@ -38,9 +36,7 @@ export default function RecordVideo({ route, navigation }) {
         ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
 
         return () => {
-            ScreenOrientation.lockAsync(
-                ScreenOrientation.OrientationLock.PORTRAIT_UP,
-            )
+            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
         }
     }, [])
 
@@ -57,7 +53,7 @@ export default function RecordVideo({ route, navigation }) {
             if (!isRecording) {
                 setRecording(true)
                 const uri = await cameraRef.current.recordAsync({
-                    quality: Camera.Constants.VideoQuality['480p'],
+                    quality: Camera.Constants.VideoQuality['720p'],
                     maxDuration: duration,
                 })
 
@@ -80,8 +76,8 @@ export default function RecordVideo({ route, navigation }) {
         try {
             actions.showLoading()
 
-            saveVideo = getActionType()
-            await saveVideo
+            const setVideo = getActionType()
+            await setVideo
 
             await ScreenOrientation.lockAsync(
                 ScreenOrientation.OrientationLock.PORTRAIT_UP,
@@ -106,10 +102,7 @@ export default function RecordVideo({ route, navigation }) {
             case 'setDealershipVideo':
                 return actions['setDealershipVideo'](stepName, video.uri)
             default:
-                return actions['setWalkaroundStep'](
-                    'ACTION NOT FOUND',
-                    video.uri,
-                )
+                return actions['setWalkaroundStep']('ACTION NOT FOUND', video.uri)
         }
     }
 
@@ -130,10 +123,7 @@ export default function RecordVideo({ route, navigation }) {
                         duration={duration}
                     />
                 ) : (
-                    <VideoPlayer
-                        src={video.uri}
-                        containerStyle={styles.videoPlayer}
-                    />
+                    <VideoPlayer src={video.uri} containerStyle={styles.videoPlayer} />
                 )}
             </View>
 
@@ -147,10 +137,7 @@ export default function RecordVideo({ route, navigation }) {
                         onExit={navigation.goBack}
                     />
                 ) : (
-                    <ConfirmControls
-                        onConfirm={onConfirm}
-                        onReject={onReject}
-                    />
+                    <ConfirmControls onConfirm={onConfirm} onReject={onReject} />
                 )}
             </View>
         </View>
