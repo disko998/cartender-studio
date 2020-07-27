@@ -25,6 +25,7 @@ function RecordWalkaround({ navigation, route }) {
 
     const [selectedStep, setSelectedStep] = React.useState(null)
     const [scanQR, setScanQR] = React.useState(false)
+    const [hasPermission, setHasPermission] = React.useState(null)
     const [form, setForm] = React.useState({
         vin: '',
         title: '',
@@ -37,6 +38,10 @@ function RecordWalkaround({ navigation, route }) {
             headerRight: null,
             headerTitleAlign: 'center',
         })
+        ;(async () => {
+            const { status } = await BarCodeScanner.requestPermissionsAsync()
+            setHasPermission(status === 'granted')
+        })()
     }, [])
 
     const navigateToRecordingScreen = React.useMemo(
@@ -96,11 +101,19 @@ function RecordWalkaround({ navigation, route }) {
         setForm({ ...form, vin: data })
     }
 
+    const onScanQR = () => {
+        if (hasPermission) {
+            setScanQR(!scanQR)
+        } else {
+            alert('No access to camera')
+        }
+    }
+
     return (
         <ScrollView style={styles.container}>
             <BorderInput
                 iconName={scanQR ? 'eye-off' : 'qrcode-scan'}
-                onIconPress={() => setScanQR(!scanQR)}
+                onIconPress={onScanQR}
                 placeholder='Enter VIN #'
                 value={form.vin}
                 onChangeText={value => setForm({ ...form, vin: value })}
