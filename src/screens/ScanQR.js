@@ -30,6 +30,7 @@ export default function ScanQR({ route, navigation }) {
     return (
         <View style={styles.container}>
             <BarCodeScanner
+                barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code39]}
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={StyleSheet.absoluteFillObject}
             />
