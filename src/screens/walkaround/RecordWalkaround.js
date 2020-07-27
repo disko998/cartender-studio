@@ -1,6 +1,5 @@
 import React from 'react'
 import { StyleSheet, ScrollView, Text } from 'react-native'
-import { BarCodeScanner } from 'expo-barcode-scanner'
 
 import Color from '../../constants/Colors'
 import BorderInput from '../../components/BorderInput'
@@ -24,8 +23,6 @@ function RecordWalkaround({ navigation, route }) {
     const { currentVideo } = walkaround
 
     const [selectedStep, setSelectedStep] = React.useState(null)
-    const [scanQR, setScanQR] = React.useState(false)
-    const [hasPermission, setHasPermission] = React.useState(null)
     const [form, setForm] = React.useState({
         vin: '',
         title: '',
@@ -38,10 +35,6 @@ function RecordWalkaround({ navigation, route }) {
             headerRight: null,
             headerTitleAlign: 'center',
         })
-        ;(async () => {
-            const { status } = await BarCodeScanner.requestPermissionsAsync()
-            setHasPermission(status === 'granted')
-        })()
     }, [])
 
     const navigateToRecordingScreen = React.useMemo(
@@ -96,24 +89,15 @@ function RecordWalkaround({ navigation, route }) {
         }
     }
 
-    const handleBarCodeScanned = ({ type, data }) => {
-        setScanQR(false)
+    const onScan = data => {
         setForm({ ...form, vin: data })
-    }
-
-    const onScanQR = () => {
-        if (hasPermission) {
-            setScanQR(!scanQR)
-        } else {
-            alert('No access to camera')
-        }
     }
 
     return (
         <ScrollView style={styles.container}>
             <BorderInput
-                iconName={scanQR ? 'eye-off' : 'qrcode-scan'}
-                onIconPress={onScanQR}
+                iconName={'qrcode-scan'}
+                onIconPress={() => navigation.navigate(Routes.QR, { onScan })}
                 placeholder='Enter VIN #'
                 value={form.vin}
                 onChangeText={value => setForm({ ...form, vin: value })}
@@ -182,13 +166,6 @@ function RecordWalkaround({ navigation, route }) {
                 recordVideo={navigateToRecordingScreen}
                 chooseVideo={chooseVideo}
             />
-
-            {scanQR && (
-                <BarCodeScanner
-                    onBarCodeScanned={handleBarCodeScanned}
-                    style={StyleSheet.absoluteFillObject}
-                />
-            )}
         </ScrollView>
     )
 }
