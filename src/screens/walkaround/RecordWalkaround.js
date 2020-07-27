@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, ScrollView, Text } from 'react-native'
+import { BarCodeScanner } from 'expo-barcode-scanner'
 
 import Color from '../../constants/Colors'
 import BorderInput from '../../components/BorderInput'
@@ -23,6 +24,7 @@ function RecordWalkaround({ navigation, route }) {
     const { currentVideo } = walkaround
 
     const [selectedStep, setSelectedStep] = React.useState(null)
+    const [scanQR, setScanQR] = React.useState(false)
     const [form, setForm] = React.useState({
         vin: '',
         title: '',
@@ -89,9 +91,16 @@ function RecordWalkaround({ navigation, route }) {
         }
     }
 
+    const handleBarCodeScanned = ({ type, data }) => {
+        setScanQR(false)
+        setForm({ ...form, vin: data })
+    }
+
     return (
         <ScrollView style={styles.container}>
             <BorderInput
+                iconName={scanQR ? 'eye-off' : 'qrcode-scan'}
+                onIconPress={() => setScanQR(!scanQR)}
                 placeholder='Enter VIN #'
                 value={form.vin}
                 onChangeText={value => setForm({ ...form, vin: value })}
@@ -160,6 +169,13 @@ function RecordWalkaround({ navigation, route }) {
                 recordVideo={navigateToRecordingScreen}
                 chooseVideo={chooseVideo}
             />
+
+            {scanQR && (
+                <BarCodeScanner
+                    onBarCodeScanned={handleBarCodeScanned}
+                    style={StyleSheet.absoluteFillObject}
+                />
+            )}
         </ScrollView>
     )
 }

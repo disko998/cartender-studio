@@ -2972,6 +2972,14 @@ expo-av@~8.1.0:
     lodash "^4.17.15"
     nullthrows "^1.1.0"
 
+expo-barcode-scanner@~8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/expo-barcode-scanner/-/expo-barcode-scanner-8.1.0.tgz#2f1504465725673a18453d976062b3aab55dd867"
+  integrity sha512-S9fpP4NKRml/xVpioHpixn0RSsGs3mgdhwjGjMitl3Cx/euxJtVy1UZK1zX5/62vFtO6gl/PQgeLGpv8Bm8w+w==
+  dependencies:
+    lodash "^4.6.0"
+    prop-types "^15.6.0"
+
 expo-camera@~8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-8.2.0.tgz#9c849f0dc409e1fe6ee886f479e0ee0050b6d386"

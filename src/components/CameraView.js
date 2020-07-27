@@ -3,7 +3,6 @@ import { View, StyleSheet, Text } from 'react-native'
 import { Camera } from 'expo-camera'
 import { Countdown } from 'react-native-popcountdown'
 
-import Counter from './Counter'
 import Color from '../constants/Colors'
 
 export default CameraView = React.forwardRef(
