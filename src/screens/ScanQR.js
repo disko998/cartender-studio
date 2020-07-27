@@ -4,7 +4,6 @@ import { BarCodeScanner } from 'expo-barcode-scanner'
 
 export default function ScanQR({ route, navigation }) {
     const [hasPermission, setHasPermission] = React.useState(null)
-    const [scanned, setScanned] = useState(false)
 
     useEffect(() => {
         ;(async () => {
@@ -14,7 +13,6 @@ export default function ScanQR({ route, navigation }) {
     }, [])
 
     const handleBarCodeScanned = ({ type, data }) => {
-        setScanned(true)
         route.params.onScan(data)
         navigation.goBack()
         // alert(`Bar code with type ${type} and data ${data} has been scanned!`)
@@ -31,17 +29,9 @@ export default function ScanQR({ route, navigation }) {
         <View style={styles.container}>
             <BarCodeScanner
                 barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code39]}
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                onBarCodeScanned={handleBarCodeScanned}
                 style={StyleSheet.absoluteFillObject}
             />
-
-            {scanned && (
-                <Button
-                    title={'Tap to Scan Again'}
-                    onPress={() => setScanned(false)}
-                    style={styles.button}
-                />
-            )}
         </View>
     )
 }
