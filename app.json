@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Develop",
-    "slug": "develop",
+    "name": "Sales Studio",
+    "slug": "sales-studio",
     "platforms": [
       "ios",
       "android"

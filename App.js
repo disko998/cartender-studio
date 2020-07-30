@@ -15,10 +15,7 @@ export default function App() {
     } else {
         return (
             <>
-                <StatusBar
-                    barStyle='dark-content'
-                    backgroundColor={Color.white}
-                />
+                <StatusBar barStyle='dark-content' backgroundColor={Color.white} />
                 <SafeAreaView style={styles.container}>
                     <AppProvider>
                         <AppContext.Consumer>

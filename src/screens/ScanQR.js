@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Text, View, StyleSheet, Button } from 'react-native'
+import React, { useEffect } from 'react'
+import { Text, View, StyleSheet } from 'react-native'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 
 export default function ScanQR({ route, navigation }) {
@@ -41,6 +41,4 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
     },
-    scanQR: {},
-    button: {},
 })
