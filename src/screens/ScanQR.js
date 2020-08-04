@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 
+import Routes from '../constants/Routes'
+
 export default function ScanQR({ route, navigation }) {
     const [hasPermission, setHasPermission] = React.useState(null)
 
@@ -10,11 +12,16 @@ export default function ScanQR({ route, navigation }) {
             const { status } = await BarCodeScanner.requestPermissionsAsync()
             setHasPermission(status === 'granted')
         })()
+
+        navigation.setOptions({
+            headerTitle: 'VIN Scan',
+            headerTitleAlign: 'center',
+        })
     }, [])
 
     const handleBarCodeScanned = ({ type, data }) => {
         route.params.onScan(data)
-        navigation.goBack()
+        navigation.navigate(Routes.RECORD_WALKAROUND)
         // alert(`Bar code with type ${type} and data ${data} has been scanned!`)
     }
 
@@ -28,7 +35,13 @@ export default function ScanQR({ route, navigation }) {
     return (
         <View style={styles.container}>
             <BarCodeScanner
-                barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code39]}
+                barCodeTypes={[
+                    BarCodeScanner.Constants.BarCodeType.code39,
+                    BarCodeScanner.Constants.BarCodeType.qr,
+                    BarCodeScanner.Constants.BarCodeType.code128,
+                    BarCodeScanner.Constants.BarCodeType.code39mod43,
+                    BarCodeScanner.Constants.BarCodeType.pdf417,
+                ]}
                 onBarCodeScanned={handleBarCodeScanned}
                 style={StyleSheet.absoluteFillObject}
             />
