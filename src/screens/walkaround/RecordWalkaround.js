@@ -97,7 +97,7 @@ function RecordWalkaround({ navigation, route }) {
         <ScrollView style={styles.container}>
             <BorderInput
                 iconName={'qrcode-scan'}
-                onIconPress={() => navigation.navigate(Routes.QR, { onScan })}
+                onIconPress={() => navigation.navigate(Routes.SCAN_BARCODE, { onScan })}
                 placeholder='Enter VIN #'
                 value={form.vin}
                 onChangeText={value => setForm({ ...form, vin: value })}

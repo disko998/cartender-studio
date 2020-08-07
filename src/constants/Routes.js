@@ -4,7 +4,7 @@ export default {
     PLAYBACK: 'Playback',
     HOME: 'Home',
     CAMERA: 'Camera',
-    QR: 'Scan QR',
+    SCAN_BARCODE: 'Scan Barcode',
 
     WALKAROUND: 'Walkaround',
     INSPECTION: 'Inspection',

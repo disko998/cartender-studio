@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { BarCodeScanner } from 'expo-barcode-scanner'
+import * as ScreenOrientation from 'expo-screen-orientation'
+import { Camera } from 'expo-camera'
 
 import Routes from '../constants/Routes'
+import Color from '../constants/Colors'
 
-export default function ScanQR({ route, navigation }) {
+export default function BarcodeScanner({ route, navigation }) {
     const [hasPermission, setHasPermission] = React.useState(null)
 
     useEffect(() => {
@@ -17,12 +20,18 @@ export default function ScanQR({ route, navigation }) {
             headerTitle: 'VIN Scan',
             headerTitleAlign: 'center',
         })
+
+        // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
+
+        // return () => {
+        //     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+        // }
     }, [])
 
     const handleBarCodeScanned = ({ type, data }) => {
         route.params.onScan(data)
         navigation.navigate(Routes.RECORD_WALKAROUND)
-        // alert(`Bar code with type ${type} and data ${data} has been scanned!`)
+        //alert(`Bar code with type ${type} and data ${data} has been scanned!`)
     }
 
     if (hasPermission === null) {
@@ -33,25 +42,45 @@ export default function ScanQR({ route, navigation }) {
     }
 
     return (
-        <View style={styles.container}>
-            <BarCodeScanner
-                barCodeTypes={[
+        <Camera
+            style={styles.container}
+            onBarCodeScanned={handleBarCodeScanned}
+            barCodeScannerSettings={{
+                barCodeTypes: [
                     BarCodeScanner.Constants.BarCodeType.code39,
                     BarCodeScanner.Constants.BarCodeType.qr,
                     BarCodeScanner.Constants.BarCodeType.code128,
                     BarCodeScanner.Constants.BarCodeType.code39mod43,
                     BarCodeScanner.Constants.BarCodeType.pdf417,
-                ]}
-                onBarCodeScanned={handleBarCodeScanned}
-                style={StyleSheet.absoluteFillObject}
-            />
-        </View>
+                ],
+            }}
+        >
+            <View style={styles.scanner} />
+            <Text style={styles.text}>
+                Line up the VIN barcode inside the box to automatically capture the VIN
+            </Text>
+        </Camera>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    scanner: {
+        width: 250,
+        height: 250,
+        backgroundColor: 'rgba(18,97,189,.2)',
+        borderColor: Color.white,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderStyle: 'solid',
+    },
+    text: {
+        color: Color.white,
+        textAlign: 'center',
+        marginTop: 5,
     },
 })

@@ -25,7 +25,7 @@ import Greeting from '../screens/greeting/Greeting'
 import Dealership from '../screens/dealership/Dealership'
 import RecordDealership from '../screens/dealership/RecordDealership'
 import Settings from '../screens/Settings'
-import ScanQR from '../screens/ScanQR'
+import BarcodeScanner from '../screens/BarcodeScanner'
 
 const BottomTab = createBottomTabNavigator()
 const HomeStack = createStackNavigator()
@@ -216,7 +216,7 @@ export function HomeNavigation({ navigation }) {
 
             <HomeStack.Screen name={Routes.CAMERA} component={RecordVideo} />
             <HomeStack.Screen name={Routes.PLAYBACK} component={Playback} />
-            <HomeStack.Screen name={Routes.QR} component={ScanQR} />
+            <HomeStack.Screen name={Routes.SCAN_BARCODE} component={BarcodeScanner} />
         </HomeStack.Navigator>
     )
 }

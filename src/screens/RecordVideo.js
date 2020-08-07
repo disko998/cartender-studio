@@ -91,7 +91,6 @@ export default function RecordVideo({ route, navigation }) {
     }
 
     const getActionType = () => {
-        console.log('ACTION', actionType)
         switch (actionType) {
             case 'setInspectionVideo':
                 return actions['setInspectionVideo'](video.uri)
