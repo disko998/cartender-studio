@@ -48,9 +48,7 @@ export default function RecordGreeting({ navigation, route }) {
     const chooseVideo = React.useMemo(
         () => async () => {
             try {
-                const video = await pickVideoFromLibrary(
-                    selectedStep.duration * 1000,
-                )
+                const video = await pickVideoFromLibrary(selectedStep.duration * 1000)
 
                 setSelectedStep(null)
 
@@ -94,14 +92,14 @@ export default function RecordGreeting({ navigation, route }) {
     return (
         <ScrollView style={styles.container}>
             <BorderInput
-                placeholder='Enter Your Name'
-                value={form.name}
-                onChangeText={value => setForm({ ...form, name: value })}
-            />
-            <BorderInput
                 placeholder='Enter Customer Name'
                 value={form.customer}
                 onChangeText={value => setForm({ ...form, customer: value })}
+            />
+            <BorderInput
+                placeholder='Enter Your Name'
+                value={form.name}
+                onChangeText={value => setForm({ ...form, name: value })}
             />
             <BorderInput
                 placeholder='Enter Job Title'
@@ -114,15 +112,11 @@ export default function RecordGreeting({ navigation, route }) {
                 onChangeText={value => setForm({ ...form, phone: value })}
                 keyboardType='phone-pad'
             />
-            <Text style={styles.text}>
-                Select or Record Your Video Segments
-            </Text>
+            <Text style={styles.text}>Select or Record Your Video Segments</Text>
             <StepButton
                 title={`Select or Record Video`}
                 success={!!greeting.currentVideo}
-                onPress={() =>
-                    onStepPress(recordingDuration.greeting, steps.greeting)
-                }
+                onPress={() => onStepPress(recordingDuration.greeting, steps.greeting)}
             />
             <StepButton
                 title='GENERATE VIDEO'

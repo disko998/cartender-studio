@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, StatusBar, TouchableOpacity } from 'react-native'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import { Camera } from 'expo-camera'
@@ -19,13 +19,14 @@ export default function BarcodeScanner({ route, navigation }) {
         navigation.setOptions({
             headerTitle: 'VIN Scan',
             headerTitleAlign: 'center',
+            headerShown: false,
         })
 
-        // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
+        ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
 
-        // return () => {
-        //     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
-        // }
+        return () => {
+            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+        }
     }, [])
 
     const handleBarCodeScanned = ({ type, data }) => {
@@ -41,25 +42,37 @@ export default function BarcodeScanner({ route, navigation }) {
         return <Text>No access to camera</Text>
     }
 
+    const onBack = async () => {
+        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+        navigation.goBack()
+    }
+
     return (
-        <Camera
-            style={styles.container}
-            onBarCodeScanned={handleBarCodeScanned}
-            barCodeScannerSettings={{
-                barCodeTypes: [
-                    BarCodeScanner.Constants.BarCodeType.code39,
-                    BarCodeScanner.Constants.BarCodeType.qr,
-                    BarCodeScanner.Constants.BarCodeType.code128,
-                    BarCodeScanner.Constants.BarCodeType.code39mod43,
-                    BarCodeScanner.Constants.BarCodeType.pdf417,
-                ],
-            }}
-        >
-            <View style={styles.scanner} />
-            <Text style={styles.text}>
-                Line up the VIN barcode inside the box to automatically capture the VIN
-            </Text>
-        </Camera>
+        <>
+            <StatusBar hidden />
+            <Camera
+                style={styles.container}
+                onBarCodeScanned={handleBarCodeScanned}
+                barCodeScannerSettings={{
+                    barCodeTypes: [
+                        BarCodeScanner.Constants.BarCodeType.code39,
+                        BarCodeScanner.Constants.BarCodeType.qr,
+                        BarCodeScanner.Constants.BarCodeType.code128,
+                        BarCodeScanner.Constants.BarCodeType.code39mod43,
+                        BarCodeScanner.Constants.BarCodeType.pdf417,
+                    ],
+                }}
+            >
+                <Text style={styles.text}>
+                    Line up the VIN barcode inside the box to automatically capture the
+                    VIN.
+                </Text>
+                <View style={styles.scanner} />
+                <TouchableOpacity style={styles.button} onPress={onBack}>
+                    <Text style={styles.btnText}>Cancel</Text>
+                </TouchableOpacity>
+            </Camera>
+        </>
     )
 }
 
@@ -68,19 +81,39 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        flexDirection: 'column',
+    },
+    wrapper: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        backgroundColor: 'transparent',
+        padding: '5%',
+        flex: 1,
     },
     scanner: {
-        width: 250,
-        height: 250,
+        height: 150,
+        width: '80%',
         backgroundColor: 'rgba(18,97,189,.2)',
         borderColor: Color.white,
         borderRadius: 5,
         borderWidth: 1,
         borderStyle: 'solid',
+
+        marginVertical: 10,
     },
     text: {
         color: Color.white,
-        textAlign: 'center',
-        marginTop: 5,
+    },
+    button: {
+        backgroundColor: Color.mainBlue,
+        padding: 10,
+        borderRadius: 10,
+        paddingHorizontal: 20,
+    },
+    btnText: {
+        color: Color.white,
+        textTransform: 'uppercase',
+        fontSize: 18,
     },
 })
