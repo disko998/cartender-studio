@@ -8,6 +8,7 @@ import { pullingInterval } from '../constants/Settings'
 export default function useFetchProjects() {
     const {
         actions: { getProjects },
+        data: { user },
     } = React.useContext(AppContext)
 
     React.useEffect(() => {
@@ -20,5 +21,7 @@ export default function useFetchProjects() {
                 __DEV__ && console.log(error.message)
             }
         })()
+
+        return () => clearInterval(interval)
     }, [])
 }

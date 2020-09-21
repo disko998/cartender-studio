@@ -7,15 +7,15 @@ import Constants from 'expo-constants'
 import * as Permissions from 'expo-permissions'
 
 import { _DATA } from './_DATA'
-import { post, api, get } from '../api'
+import { post, api, get, request, WORDPRESS_AUTH } from '../api'
 import { s3Options, templates, steps } from '../constants/Settings'
 
 export const AppContext = React.createContext()
 export const Provider = AppContext.Provider
 
 const devCredentials = {
-    email: 'disko998@gmail.com',
-    password: '697971a5294079197abe596f57f425fd',
+    username: 'stefan',
+    password: '9zQVzQC5WAR08aqouNGlkMAD',
 }
 
 export default class AppProvider extends Component {
@@ -52,21 +52,27 @@ export default class AppProvider extends Component {
             throw new Error('Please enter correct email and password')
         }
 
-        let user = await post(
-            api.auth,
-            __DEV__
-                ? devCredentials
-                : {
-                      email,
-                      password,
-                  },
-        )
+        const response = await fetch(WORDPRESS_AUTH, {
+            method: 'POST',
+            body: __DEV__
+                ? JSON.stringify(devCredentials)
+                : JSON.stringify({
+                      username: email,
+                      password: password,
+                  }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
 
-        if (!user.token) {
+        const user = await response.json()
+
+        if (!response.ok) {
             throw new Error(user.message)
         }
 
-        await AsyncStorage.setItem('token', user.token)
+        await AsyncStorage.setItem('token', user.data.user.render_api_key)
+        await AsyncStorage.setItem('wordpress_token', user.data.user.api_key)
 
         this.getCurrentUser()
     }
@@ -159,7 +165,9 @@ export default class AppProvider extends Component {
 
     pickVideoFromLibrary = async (duration = 15000) => {
         if (Constants.platform.ios) {
-            const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+            const { status } = await Permissions.askAsync(
+                Permissions.CAMERA_ROLL,
+            )
             if (status !== 'granted') {
                 throw new Error(
                     `Sorry, we need camera roll permissions to make this work!`,
@@ -258,7 +266,10 @@ export default class AppProvider extends Component {
             ...this.state,
             walkaround: {
                 ...this.state.walkaround,
-                currentVideo: { ...this.state.walkaround.currentVideo, [stepName]: url },
+                currentVideo: {
+                    ...this.state.walkaround.currentVideo,
+                    [stepName]: url,
+                },
             },
         })
     }
@@ -356,7 +367,12 @@ export default class AppProvider extends Component {
     }
 
     generateWalkaroundVideo = async ({ vin, title, details }) => {
-        const { Intro, Interior, Exterior, Outro } = this.state.walkaround.currentVideo
+        const {
+            Intro,
+            Interior,
+            Exterior,
+            Outro,
+        } = this.state.walkaround.currentVideo
 
         if (!(vin && title && details)) {
             throw new Error('Please fill out the form')

@@ -1,4 +1,6 @@
 const URL = 'https://renderapi.cartender.co'
+export const WORDPRESS_AUTH =
+    'https://studio.cartender.co/wp-json/cartender/v1/auth'
 
 const headerPrefix = {
     'Content-Type': 'application/json',
@@ -30,6 +32,12 @@ export const get = async (path, header) => {
             ...header,
         },
     })
+
+    return await response.json()
+}
+
+export const request = async (url, config) => {
+    const response = await fetch(url, config)
 
     return await response.json()
 }
