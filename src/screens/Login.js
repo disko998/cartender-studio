@@ -4,35 +4,25 @@ import { StyleSheet, View, Image, Text } from 'react-native'
 import PrimaryButton from '../components/PrimaryButton'
 import StyledInput from '../components/StyledInput'
 import Color from '../constants/Colors'
-import Routes from '../constants/Routes'
-import { AppContext } from '../context/AppProvider'
+import { UserContext } from '../providers/user'
+
+const logo = require('../assets/images/logo.jpg')
 
 function Login({ navigation }) {
     const {
-        actions: { loginWithEmailAndPassword },
-    } = React.useContext(AppContext)
+        actions: { loginUser },
+    } = React.useContext(UserContext)
 
     const [credentials, setCredentials] = React.useState({
         email: '',
         password: '',
     })
 
-    const onLogin = async () => {
-        try {
-            await loginWithEmailAndPassword(
-                credentials.email,
-                credentials.password,
-            )
-        } catch (error) {
-            alert(error.message)
-        }
-    }
-
     return (
         <View style={styles.container}>
             <View style={styles.logoStack}>
                 <Image
-                    source={require('../assets/images/logo.jpg')}
+                    source={logo}
                     resizeMode='contain'
                     style={styles.logo}
                 ></Image>
@@ -59,7 +49,7 @@ function Login({ navigation }) {
             <PrimaryButton
                 style={styles.loginButton}
                 title='Login'
-                onPress={onLogin}
+                onPress={() => loginUser(credentials)}
             />
 
             <Text style={styles.text}>

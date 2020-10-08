@@ -7,7 +7,7 @@ import Constants from 'expo-constants'
 import * as Permissions from 'expo-permissions'
 
 import { _DATA } from './_DATA'
-import { post, api, get, request, WORDPRESS_AUTH } from '../api'
+import { api, post, apiRoutes, get, WORDPRESS_AUTH } from '../api'
 import { s3Options, templates, steps } from '../constants/Settings'
 
 export const AppContext = React.createContext()
@@ -65,14 +65,14 @@ export default class AppProvider extends Component {
             },
         })
 
-        const user = await response.json()
+        const resJson = await response.json()
 
         if (!response.ok) {
-            throw new Error(user.message)
+            throw new Error(resJson.message)
         }
 
-        await AsyncStorage.setItem('token', user.data.user.render_api_key)
-        await AsyncStorage.setItem('wordpress_token', user.data.user.api_key)
+        await AsyncStorage.setItem('token', resJson.data.user.render_api_key)
+        await AsyncStorage.setItem('wordpress_token', resJson.data.user.api_key)
 
         this.getCurrentUser()
     }
@@ -86,12 +86,12 @@ export default class AppProvider extends Component {
     getCurrentUser = async () => {
         const token = await AsyncStorage.getItem('token')
 
-        const userData = await get(`${api.profile}`, {
+        const userData = await get(apiRoutes.profile, {
             Authorization: `Bearer ${token}`,
         })
 
         if (userData.message) {
-            throw new Error(user.message)
+            throw new Error(userData.message)
         }
 
         this.setState({
@@ -102,7 +102,7 @@ export default class AppProvider extends Component {
 
     /* Video actions */
     getProjects = async () => {
-        const projects = await get(`${api.projects}?sort=-createDate`, {
+        const projects = await get(`${apiRoutes.projects}?sort=-createDate`, {
             Authorization: `Bearer ${this.state.user.token}`,
         })
 
@@ -301,7 +301,7 @@ export default class AppProvider extends Component {
 
         __DEV__ && console.log('POST request', postData)
 
-        const res = await post(api.projects, postData, {
+        const res = await post(apiRoutes.projects, postData, {
             Authorization: `Bearer ${this.state.user.token}`,
         })
 
@@ -348,7 +348,7 @@ export default class AppProvider extends Component {
 
         __DEV__ && console.log('POST request', postData)
 
-        const res = await post(api.projects, postData, {
+        const res = await post(apiRoutes.projects, postData, {
             Authorization: `Bearer ${this.state.user.token}`,
         })
 
@@ -405,7 +405,7 @@ export default class AppProvider extends Component {
 
         __DEV__ && console.log('GENERATE REQUEST', postData)
 
-        const res = await post(api.projects, postData, {
+        const res = await post(apiRoutes.projects, postData, {
             Authorization: `Bearer ${this.state.user.token}`,
         })
 

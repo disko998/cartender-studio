@@ -34,7 +34,9 @@ const RooStack = createStackNavigator()
 
 function inDevelopmentScreen({ route, navigation }) {
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+        >
             <Text
                 style={{
                     marginBottom: 15,
@@ -121,7 +123,11 @@ export function BottomTabNavigator({ navigation, route }) {
                 options={{
                     title: Routes.WALKAROUND,
                     tabBarIcon: ({ focused, color }) => (
-                        <MaterialCommunityIconsIcon name='car' size={22} color={color} />
+                        <MaterialCommunityIconsIcon
+                            name='car'
+                            size={22}
+                            color={color}
+                        />
                     ),
                 }}
             />
@@ -195,7 +201,10 @@ export function HomeNavigation({ navigation }) {
                 },
             }}
         >
-            <HomeStack.Screen name={Routes.VIDEO_LIST} component={BottomTabNavigator} />
+            <HomeStack.Screen
+                name={Routes.VIDEO_LIST}
+                component={BottomTabNavigator}
+            />
 
             <RecordingStack.Screen
                 name={Routes.RECORD_WALKAROUND}
@@ -216,7 +225,10 @@ export function HomeNavigation({ navigation }) {
 
             <HomeStack.Screen name={Routes.CAMERA} component={RecordVideo} />
             <HomeStack.Screen name={Routes.PLAYBACK} component={Playback} />
-            <HomeStack.Screen name={Routes.SCAN_BARCODE} component={BarcodeScanner} />
+            <HomeStack.Screen
+                name={Routes.SCAN_BARCODE}
+                component={BarcodeScanner}
+            />
         </HomeStack.Navigator>
     )
 }
@@ -224,18 +236,7 @@ export function HomeNavigation({ navigation }) {
 export default function RootNavigation() {
     const {
         data: { user },
-        actions: { getCurrentUser },
     } = React.useContext(AppContext)
-
-    React.useEffect(() => {
-        ;(async () => {
-            try {
-                await getCurrentUser()
-            } catch (error) {
-                console.log(error.message)
-            }
-        })()
-    }, [])
 
     return (
         <NavigationContainer>
@@ -243,7 +244,10 @@ export default function RootNavigation() {
                 {!user ? (
                     <RooStack.Screen name={Routes.LOGIN} component={Login} />
                 ) : (
-                    <RooStack.Screen name={Routes.HOME} component={HomeNavigation} />
+                    <RooStack.Screen
+                        name={Routes.HOME}
+                        component={HomeNavigation}
+                    />
                 )}
             </RooStack.Navigator>
         </NavigationContainer>

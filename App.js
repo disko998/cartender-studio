@@ -6,6 +6,7 @@ import useCachedResources from './src/hooks/useCachedResources'
 import Color from './src/constants/Colors'
 import RootNavigation from './src/navigation/Navigation'
 import AppProvider, { AppContext } from './src/context/AppProvider'
+import UserProvider from './src/providers/user'
 
 export default function App() {
     const isLoadingComplete = useCachedResources()
@@ -15,22 +16,27 @@ export default function App() {
     } else {
         return (
             <>
-                <StatusBar barStyle='dark-content' backgroundColor={Color.white} />
+                <StatusBar
+                    barStyle='dark-content'
+                    backgroundColor={Color.white}
+                />
                 <SafeAreaView style={styles.container}>
                     <AppProvider>
-                        <AppContext.Consumer>
-                            {state => (
-                                <Spinner
-                                    visible={state.data.loading}
-                                    textContent='Uploading...please wait'
-                                    color={Color.white}
-                                    textStyle={{ color: Color.white }}
-                                    animation='fade'
-                                    overlayColor='rgba(0,0,0,.5)'
-                                />
-                            )}
-                        </AppContext.Consumer>
-                        <RootNavigation />
+                        <UserProvider>
+                            <AppContext.Consumer>
+                                {state => (
+                                    <Spinner
+                                        visible={state.data.loading}
+                                        textContent='Uploading...please wait'
+                                        color={Color.white}
+                                        textStyle={{ color: Color.white }}
+                                        animation='fade'
+                                        overlayColor='rgba(0,0,0,.5)'
+                                    />
+                                )}
+                            </AppContext.Consumer>
+                            <RootNavigation />
+                        </UserProvider>
                     </AppProvider>
                 </SafeAreaView>
             </>
