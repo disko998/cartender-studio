@@ -9,7 +9,7 @@ export const apiRoutes = {
 
 export const wpRoutes = {
     auth: '/cartender/v1/auth',
-    profile: '/wp/v1/users/me',
+    profile: '/wp/v2/users/me',
     dealership: '/acf/v3/dealership',
 }
 
@@ -48,9 +48,7 @@ export const api = async (url, method, body, headers) => {
         headers: { ...headers, ...headerPrefix },
     })
 
-    console.log(response)
     const json = await response.json()
-    console.log(json)
 
     if (!response.ok) {
         throw new Error(json.message || 'Server error')

@@ -15,7 +15,7 @@ const UserProvider = ({ children }) => {
     const [loading, setLoading] = useState(null)
 
     useEffect(() => {
-        getCurrentUser()
+        getCurrentUser(false)
     }, [])
 
     // actions
@@ -26,7 +26,7 @@ const UserProvider = ({ children }) => {
                 throw new Error('Please enter correct email and password')
             }
 
-            // login
+            // login user
             setLoading(true)
             const res = await api(
                 `${WORDPRESS_URL}${wpRoutes.auth}`,
@@ -37,16 +37,13 @@ const UserProvider = ({ children }) => {
             // save tokens
             await Promise.all([
                 AsyncStorage.setItem(WORDPRESS_TOKEN, res.data.user.api_key),
-                AsyncStorage.setItem(
-                    RENDER_API_TOKEN,
-                    res.data.user.render_api_key,
-                ),
+                AsyncStorage.setItem(RENDER_API_TOKEN, res.data.user.render_api_key),
             ])
 
             // get user profile
             getCurrentUser()
         } catch (error) {
-            console.log(error)
+            __DEV__ && console.log(error)
             Alert.alert('Login failed', 'Wrong credentials')
         } finally {
             setLoading(false)
@@ -62,24 +59,22 @@ const UserProvider = ({ children }) => {
         setCurrent(null)
     }
 
-    const getCurrentUser = async () => {
+    const getCurrentUser = async (showError = true) => {
         try {
             const token = await AsyncStorage.getItem(WORDPRESS_TOKEN)
 
             if (!token) return
 
-            const user = await api(
-                `${WORDPRESS_URL}${wpRoutes.profile}`,
-                'GET',
-                null,
-                {
-                    Authorization: `Bearer ${token}`,
-                },
-            )
+            const user = await api(`${WORDPRESS_URL}${wpRoutes.profile}`, 'GET', null, {
+                Authorization: `Bearer ${token}`,
+            })
+
+            user && setCurrent(user)
 
             console.log(user)
         } catch (error) {
             __DEV__ && console.log(error)
+            showError && Alert.alert('Fetching user failed', error.message)
         }
     }
 
